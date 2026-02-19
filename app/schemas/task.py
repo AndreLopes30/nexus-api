@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class criarTarefa(BaseModel):
     title: str
@@ -6,13 +6,12 @@ class criarTarefa(BaseModel):
     done: bool = False
 
 class lerTarefa(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     title: str
     description: str | None = None
     done: bool
-
-    class Config:
-        orm_mode = True
 
 class atualizarTarefa(BaseModel):
     title: str | None = None

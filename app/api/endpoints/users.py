@@ -19,7 +19,7 @@ def get_user_or_404(db: Session, user_id: int) -> User:
 
 @router.get("/", response_model=List[lerUsuario])
 def list_users(current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
-    usuarios = [lerUsuario.from_orm(u) for u in db.query(User).all()]
+    usuarios = [lerUsuario.model_validate(u) for u in db.query(User).all()]
     return usuarios
 
 @router.post("/", response_model=lerUsuario, status_code=201)
@@ -30,7 +30,7 @@ def create_user(usuario: criarUsuario, db: Session = Depends(get_db)):
     try:
         db.commit()
         db.refresh(usuario_db)
-        return lerUsuario.from_orm(usuario_db)
+        return lerUsuario.model_validate(usuario_db)
     except IntegrityError:
         db.rollback()
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email já cadastrado")
@@ -38,7 +38,7 @@ def create_user(usuario: criarUsuario, db: Session = Depends(get_db)):
 @router.get("/{user_id}", response_model=lerUsuario)
 def get_user(user_id: int, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
     usuario = get_user_or_404(db, user_id)
-    return lerUsuario.from_orm(usuario)
+    return lerUsuario.model_validate(usuario_db)
 
 @router.patch("/{user_id}", response_model=lerUsuario)
 def update_user(user_id: int, usuario: atualizarUsuario, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -47,7 +47,7 @@ def update_user(user_id: int, usuario: atualizarUsuario, current_user: str = Dep
     if usuario_db.email != current_user:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Não autorizado")
 
-    for field, value in usuario.dict(exclude_unset=True).items():
+    for field, value in usuario.model_dump(exclude_unset=True).items():
         if field == "senha":
             setattr(usuario_db, "hashed_password", get_password_hash(value))
         else:
@@ -55,7 +55,7 @@ def update_user(user_id: int, usuario: atualizarUsuario, current_user: str = Dep
 
     db.commit()
     db.refresh(usuario_db)
-    return lerUsuario.from_orm(usuario_db)
+    return lerUsuario.model_validate(usuario_db)
 
 @router.delete("/{user_id}")
 def delete_user(user_id: int, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):

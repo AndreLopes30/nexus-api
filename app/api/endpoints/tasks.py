@@ -19,7 +19,7 @@ def get_owner(db: Session, current_user: str) -> User:
 def list_tasks(current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
     owner = get_owner(db, current_user)
     tarefas = db.query(Task).filter(Task.owner_id == owner.id).all()
-    return [lerTarefa.from_orm(t) for t in tarefas]
+    return [lerTarefa.model_validate(t) for t in tarefas]
 
 @router.post("/", response_model=lerTarefa, status_code=status.HTTP_201_CREATED)
 def create_task(tarefa: criarTarefa, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -28,7 +28,7 @@ def create_task(tarefa: criarTarefa, current_user: str = Depends(get_current_use
     db.add(tarefa_db)
     db.commit()
     db.refresh(tarefa_db)
-    return lerTarefa.from_orm(tarefa_db)
+    return lerTarefa.model_validate(tarefa_db)
 
 @router.patch("/{task_id}", response_model=lerTarefa)
 def update_task(task_id: int, tarefa: atualizarTarefa, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -44,7 +44,7 @@ def update_task(task_id: int, tarefa: atualizarTarefa, current_user: str = Depen
     
     db.commit()
     db.refresh(tarefa_db)
-    return lerTarefa.from_orm(tarefa_db)
+    return lerTarefa.model_validate(tarefa_db)
 
 @router.delete("/{task_id}")
 def delete_task(task_id: int, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
