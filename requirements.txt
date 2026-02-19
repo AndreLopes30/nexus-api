@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+SQLAlchemy
+psycopg2-binary
+passlib[bcrypt]
+python-jose
+pydantic
+pytest
+httpx
+python-multipart
