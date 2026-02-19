@@ -33,5 +33,6 @@ jobs:
       - name: Run tests
         env:
           DATABASE_URL: sqlite:///:memory:
+          SECRET_KEY: test-secret-key-for-ci-only  
         run: |
-          pytest -q
+          pytest Tests/ -q

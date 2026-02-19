@@ -56,3 +56,27 @@ def test_create_user_email_unique():
     payload = {"nome": "User2", "email": "unique@example.com", "senha": "secret2"}
     r = client.post("/users/", json=payload)
     assert r.status_code == 400
+
+def test_login_wrong_password():
+    client.post("/users/", json={"nome": "U", "email": "u@test.com", "senha": "pass"})
+    r = client.post("/users/login", data={"username": "u@test.com", "password": "wrong"})
+    assert r.status_code == 401
+
+def test_task_forbidden_other_user():
+    client.post("/users/", json={"email": "u1@test.com", "senha": "pass"})
+    client.post("/users/", json={"email": "u2@test.com", "senha": "pass"})
+    
+    t1 = client.post("/users/login", data={"username": "u1@test.com", "password": "pass"})
+    t2 = client.post("/users/login", data={"username": "u2@test.com", "password": "pass"})
+    
+    h1 = {"Authorization": f"Bearer {t1.json()['access_token']}"}
+    h2 = {"Authorization": f"Bearer {t2.json()['access_token']}"}
+    
+    task = client.post("/tasks/", json={"title": "t1"}, headers=h1).json()
+    
+    r = client.delete(f"/tasks/{task['id']}", headers=h2)
+    assert r.status_code == 403
+
+def test_list_tasks_unauthenticated():
+    r = client.get("/tasks/")
+    assert r.status_code == 401    
