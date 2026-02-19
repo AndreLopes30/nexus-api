@@ -2,11 +2,12 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
-from app.schemas.user import criarUsuario, lerUsuario
+from app.schemas.user import criarUsuario, lerUsuario, atualizarUsuario
 from app.schemas.token import Token
 from app.db.database import get_db
 from app.models.user import User
 from app.core.security import get_current_user, verify_password, create_access_token, get_password_hash
+from sqlalchemy.exc import IntegrityError
 
 router = APIRouter()
 
@@ -26,9 +27,13 @@ def create_user(usuario: criarUsuario, db: Session = Depends(get_db)):
     hashed_password = get_password_hash(usuario.senha)
     usuario_db = User(nome=usuario.nome, email=usuario.email, hashed_password=hashed_password)
     db.add(usuario_db)
-    db.commit()
-    db.refresh(usuario_db)
-    return lerUsuario.from_orm(usuario_db)
+    try:
+        db.commit()
+        db.refresh(usuario_db)
+        return lerUsuario.from_orm(usuario_db)
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email já cadastrado")
 
 @router.get("/{user_id}", response_model=lerUsuario)
 def get_user(user_id: int, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -36,7 +41,7 @@ def get_user(user_id: int, current_user: str = Depends(get_current_user), db: Se
     return lerUsuario.from_orm(usuario)
 
 @router.patch("/{user_id}", response_model=lerUsuario)
-def update_user(user_id: int, usuario: criarUsuario, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
+def update_user(user_id: int, usuario: atualizarUsuario, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
     usuario_db = get_user_or_404(db, user_id)
 
     if usuario_db.email != current_user:

@@ -19,3 +19,7 @@ class lerUsuario(BaseModel):
     class Config:
         orm_mode = True
    
+class atualizarUsuario(BaseModel):
+    nome: str | None = None
+    email: str | None = None
+    senha: str | None = None
