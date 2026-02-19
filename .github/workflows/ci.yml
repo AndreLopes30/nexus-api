@@ -32,6 +32,6 @@ jobs:
 
       - name: Run tests
         env:
-          DATABASE_URL: sqlite:///./test.db
+          DATABASE_URL: sqlite:///:memory:
         run: |
           pytest -q

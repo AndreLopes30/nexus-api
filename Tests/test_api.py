@@ -2,7 +2,6 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.main import app
-from app.db import database
 from app.db.database import Base, get_db
 
 TEST_SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
@@ -17,18 +16,22 @@ def override_get_db():
     finally:
         db.close()
 
-def setup_module(module):
-    Base.metadata.create_all(bind=engine)
-
 app.dependency_overrides[get_db] = override_get_db
 client = TestClient(app)
 
-def test_create_user_and_login_and_task():
-    payload = {"email": "test@example.com", "senha": "secret"}
+def setup_function(function):
+    Base.metadata.create_all(bind=engine)
+
+def teardown_function(function):
+    Base.metadata.drop_all(bind=engine)
+
+def test_create_user_login_and_task():
+    payload = {"nome": "Test", "email": "test@example.com", "senha": "secret"}
     r = client.post("/users/", json=payload)
     assert r.status_code == 201
     data = r.json()
     assert data["email"] == "test@example.com"
+    assert data["nome"] == "Test"
 
     login_data = {"username": "test@example.com", "password": "secret"}
     r = client.post("/users/login", data=login_data)
@@ -42,3 +45,14 @@ def test_create_user_and_login_and_task():
     assert r.status_code == 201
     task = r.json()
     assert task["title"] == "tarefa 1"
+    assert task["description"] == "desc"
+    assert task["done"] is False
+
+def test_create_user_email_unique():
+    payload = {"nome": "User1", "email": "unique@example.com", "senha": "secret"}
+    r = client.post("/users/", json=payload)
+    assert r.status_code == 201
+
+    payload = {"nome": "User2", "email": "unique@example.com", "senha": "secret2"}
+    r = client.post("/users/", json=payload)
+    assert r.status_code == 400
