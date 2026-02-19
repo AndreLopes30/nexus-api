@@ -4,14 +4,12 @@ class criarTarefa(BaseModel):
     title: str
     description: str | None = None
     done: bool = False
-    owner_id: int | None = None
 
 class lerTarefa(BaseModel):
     id: int
     title: str
     description: str | None = None
     done: bool
-    owner_id: int | None = None
 
     class Config:
         orm_mode = True
