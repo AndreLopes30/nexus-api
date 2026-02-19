@@ -39,6 +39,9 @@ def get_user(user_id: int, current_user: str = Depends(get_current_user), db: Se
 def update_user(user_id: int, usuario: criarUsuario, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
     usuario_db = get_user_or_404(db, user_id)
 
+    if usuario_db.email != current_user:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Não autorizado")
+
     for field, value in usuario.dict(exclude_unset=True).items():
         if field == "senha":
             setattr(usuario_db, "hashed_password", get_password_hash(value))
@@ -52,6 +55,8 @@ def update_user(user_id: int, usuario: criarUsuario, current_user: str = Depends
 @router.delete("/{user_id}")
 def delete_user(user_id: int, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
     usuario_db = get_user_or_404(db, user_id)
+    if usuario_db.email != current_user:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Não autorizado")
     db.delete(usuario_db)
     db.commit()
     return {"message": "Usuário deletado com sucesso!"}
