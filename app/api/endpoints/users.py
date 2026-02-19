@@ -21,10 +21,10 @@ def list_users(current_user: str = Depends(get_current_user), db: Session = Depe
     usuarios = [lerUsuario.from_orm(u) for u in db.query(User).all()]
     return usuarios
 
-@router.post("/", response_model=lerUsuario, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=lerUsuario, status_code=201)
 def create_user(usuario: criarUsuario, db: Session = Depends(get_db)):
-    hashed_password = get_password_hash(usuario.senha)
-    usuario_db = User(email=usuario.email, hashed_password=hashed_password)
+    hashed_password = get_password_hash(usuario.senha[:72])
+    usuario_db = User(nome=usuario.nome, email=usuario.email, hashed_password=hashed_password)
     db.add(usuario_db)
     db.commit()
     db.refresh(usuario_db)
