@@ -12,7 +12,7 @@ API REST desenvolvida em **Python** utilizando **FastAPI** para gerenciamento de
 ## 📸 Preview do Sistema
 
 <p align="center">
-  <img src="assets/swagger-screenshot.png" width="100%" alt="Screenshot do Nexus API (Swagger)" />
+  <img src="assets/Nexus-API.png" width="100%" alt="Screenshot do Nexus API (Swagger)" />
 </p>
 
 <p align="center">
