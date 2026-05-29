@@ -149,6 +149,18 @@ alembic revision --autogenerate -m "initial"
 alembic upgrade head
 ```
 
+Antes de aplicar migrations em ambientes compartilhados (staging/produção), sempre faça backup do banco de dados. Exemplo (SQLite):
+
+```bash
+cp nexus.db nexus.db.bak
+```
+
+Em produção com PostgreSQL, faça um dump:
+
+```bash
+# pg_dump -Fc --file=backup.dump $DATABASE_URL
+```
+
 Se preferir criar as tabelas manualmente (apenas para desenvolvimento local), você ainda pode usar:
 
 ```bash
