@@ -2,209 +2,243 @@
 
 ![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Modern%20API-green)
-![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
+![Coverage](https://img.shields.io/badge/coverage-89%25-brightgreen)
+![Tests](https://img.shields.io/badge/tests-15%20passed-brightgreen)
+![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
-API REST desenvolvida em **Python** utilizando **FastAPI** para gerenciamento de usuários e tarefas, com autenticação baseada em JWT. O objetivo deste projeto é demonstrar aplicação de **boas práticas** em APIs REST, autenticação com **JWT**, organização modular e testes automatizados.
+API REST desenvolvida em **Python** com **FastAPI** para gerenciamento de usuários e tarefas, com autenticação baseada em JWT, arquitetura modular em camadas e cobertura de testes de 89% com Pytest.
 
 ---
 
-## 📸 Preview do Sistema
+## 📸 Preview do sistema
 
 <p align="center">
-  <img src="assets/Nexus-API.png" width="100%" alt="Screenshot do Nexus API (Swagger)" />
+  <img src="assets/Nexus-API.png" width="100%" alt="Screenshot do Nexus API (Swagger UI)" />
 </p>
 
 <p align="center">
   <em>Documentação interativa (Swagger UI) — endpoints de usuários e tarefas.</em>
 </p>
 
+---
+
+## 🛠️ Stack tecnológica
+
+| Tecnologia | Uso no projeto |
+|:-----------|:---------------|
+| **Python 3.10+** | Linguagem principal |
+| **FastAPI** | Framework web para a API |
+| **SQLAlchemy** | ORM — modelos e mapeamento relacional |
+| **SQLite / PostgreSQL** | SQLite em desenvolvimento, PostgreSQL em produção |
+| **Docker** | Containerização da aplicação |
+| **Passlib + Bcrypt** | Hash seguro de senhas |
+| **python-jose (JWT)** | Geração e validação de tokens de acesso |
+| **Pytest + pytest-cov** | Testes automatizados com cobertura |
 
 ---
 
-## 🛠️ Stack Tecnológica
+## 📁 Estrutura do projeto
 
-| Tecnologia              |                                                        Ícone                                                        | Uso no projeto                                      |
-| :---------------------- | :-----------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------- |
-| **Python**              |  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" width="25">  | Linguagem principal                                 |
-| **FastAPI**             | <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/fastapi/fastapi-original.svg" width="25"> | Framework web para a API                            |
-| **SQLAlchemy**          |  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" width="25">  | ORM (modelos e migrations simples)                  |
-| **SQLite / PostgreSQL** |  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/sqlite/sqlite-original.svg" width="25">  | Persistência (SQLite em dev / Postgres em produção) |
-| **Docker**              |  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original.svg" width="25">  | Containerização (opcional)                          |
-| **Passlib + Bcrypt**    |                                                          🔐                                                         | Hash de senha                                       |
-| **python-jose (JWT)**   |                                                          🔑                                                         | Geração/validação de tokens                         |
-| **Pytest**              |                                                          🧪                                                         | Testes automatizados                                |
-
----
-
-## 🚀 Funcionalidades (Endpoints)
-
-| Método   | Rota               | Descrição                                             |
-| :------- | :----------------- | :---------------------------------------------------- |
-| `GET`    | `/`                | Health check (status da API)                          |
-| `POST`   | `/users/`          | Criar usuário (registro)                              |
-| `POST`   | `/users/login`     | Login → retorna `access_token` (form data OAuth2)     |
-| `GET`    | `/users/`          | Listar usuários (autenticado)                         |
-| `GET`    | `/users/{user_id}` | Obter usuário por id (autenticado, somente o próprio) |
-| `PATCH`  | `/users/{user_id}` | Atualizar usuário (autenticado, somente o próprio)    |
-| `DELETE` | `/users/{user_id}` | Deletar usuário (autenticado, somente o próprio)      |
-| `GET`    | `/tasks/`          | Listar tarefas do usuário autenticado                 |
-| `POST`   | `/tasks/`          | Criar tarefa (associa ao usuário autenticado)         |
-| `GET`    | `/tasks/{task_id}` | Obter tarefa específica (só dono)                     |
-| `PATCH`  | `/tasks/{task_id}` | Atualizar tarefa (só dono)                            |
-| `DELETE` | `/tasks/{task_id}` | Deletar tarefa (só dono)                              |
-
-> Documentação completa e teste interativo: `http://127.0.0.1:8000/docs` (Swagger UI) ou `http://127.0.0.1:8000/redoc` (Redoc).
+```
+nexus/
+├── app/
+│   ├── api/
+│   │   ├── endpoints/
+│   │   │   ├── users.py        # Rotas de usuários (90% de cobertura)
+│   │   │   └── tasks.py        # Rotas de tarefas (92% de cobertura)
+│   │   └── api.py              # Registro de routers
+│   ├── core/
+│   │   ├── config.py           # Configurações via variáveis de ambiente
+│   │   ├── security.py         # Lógica de JWT e hashing (91% de cobertura)
+│   │   └── logging_config.py   # Configuração de logs
+│   ├── db/
+│   │   └── database.py         # Engine e sessão SQLAlchemy
+│   ├── models/
+│   │   ├── user.py             # Modelo ORM de usuário
+│   │   └── task.py             # Modelo ORM de tarefa
+│   ├── schemas/
+│   │   ├── user.py             # Schemas Pydantic de usuário (95% de cobertura)
+│   │   ├── task.py             # Schemas Pydantic de tarefa
+│   │   └── token.py            # Schema de token JWT
+│   └── main.py                 # Entry point FastAPI
+├── Tests/
+│   └── test_api.py             # 15 testes — 89% de cobertura total
+├── docker-compose.yml
+├── Dockerfile
+├── requirements.txt
+└── .env.example
+```
 
 ---
 
-## 📦 Como rodar o projeto
+## 🚀 Endpoints
 
-### Pré-requisitos
+### Usuários
 
-* Python 3.10+
-* (Opcional) Docker & docker-compose
-* Recomendo usar um virtualenv (venv)
+| Método | Rota | Autenticação | Descrição |
+|:-------|:-----|:------------:|:----------|
+| `POST` | `/users/` | ❌ | Criar usuário (registro) |
+| `POST` | `/users/login` | ❌ | Login — retorna `access_token` |
+| `GET` | `/users/` | ✅ | Listar usuários |
+| `GET` | `/users/{user_id}` | ✅ | Obter usuário (somente o próprio) |
+| `PATCH` | `/users/{user_id}` | ✅ | Atualizar usuário (somente o próprio) |
+| `DELETE` | `/users/{user_id}` | ✅ | Deletar usuário (somente o próprio) |
 
-### 🐍 Via ambiente virtual
+### Tarefas
+
+| Método | Rota | Autenticação | Descrição |
+|:-------|:-----|:------------:|:----------|
+| `GET` | `/tasks/` | ✅ | Listar tarefas do usuário autenticado |
+| `POST` | `/tasks/` | ✅ | Criar tarefa (associada ao usuário) |
+| `GET` | `/tasks/{task_id}` | ✅ | Obter tarefa (somente dono) |
+| `PATCH` | `/tasks/{task_id}` | ✅ | Atualizar tarefa (somente dono) |
+| `DELETE` | `/tasks/{task_id}` | ✅ | Deletar tarefa (somente dono) |
+
+### Health
+
+| Método | Rota | Descrição |
+|:-------|:-----|:----------|
+| `GET` | `/` | Health check |
+
+> Documentação interativa em `/docs` (Swagger UI) e `/redoc`.
+
+---
+
+## ⚙️ Como rodar o projeto
+
+### Via ambiente virtual
 
 ```bash
 # Clone o repositório
 git clone https://github.com/AndreLopes30/nexus-api.git
 cd nexus-api
 
-# Crie o ambiente virtual
+# Crie e ative o ambiente virtual
 python -m venv venv
-```
+source venv/bin/activate   # Linux/macOS
+venv\Scripts\activate      # Windows
 
-#### ▶ Ative o ambiente virtual
-
-**Windows:**
-```bash
-venv\Scripts\activate
-```
-
-**macOS / Linux:**
-```bash
-source venv/bin/activate
-```
-
----
-
-### 📦 Instale as dependências
-
-```bash
+# Instale as dependências
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
----
-
-### ⚙️ Configure o arquivo `.env`
-
-Crie manualmente um arquivo chamado `.env` na raiz do projeto com o seguinte conteúdo:
+Crie o arquivo `.env` na raiz:
 
 ```env
-SECRET_KEY=uma_chave_muito_secreta_mude_ja
+SECRET_KEY=sua_chave_secreta_aqui
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 DATABASE_URL=sqlite:///./nexus.db
 ```
 
-> ⚠️ Nunca commit o arquivo `.env` no repositório.
-
----
-
-### 🗄️ Criar as tabelas (primeira execução)
+Crie as tabelas (primeira execução):
 
 ```bash
 python -c "from app.db.database import Base, engine; Base.metadata.create_all(bind=engine)"
 ```
 
----
-
-### 🚀 Rode a API
+Inicie a API:
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-Acesse no navegador:
-
-```
-http://127.0.0.1:8000/docs
-```
+Acesse em: `http://127.0.0.1:8000/docs`
 
 ---
 
-### 🐋 Via Docker
+### Via Docker
 
 ```bash
-# Build e sobe (exemplo genérico)
 docker-compose up --build -d
 
 # Logs
 docker-compose logs -f
 
-# Parar e remover
+# Parar
 docker-compose down
 ```
 
-> No `docker-compose.yml` use variáveis de ambiente (não coloque SECRET_KEY inline). Exemplo: `SECRET_KEY=${SECRET_KEY}` e defina a variável no seu ambiente ou no serviço de CI/CD.
+> Configure as variáveis de ambiente no `docker-compose.yml` ou em um arquivo `.env` — nunca deixe `SECRET_KEY` exposto no código.
 
 ---
 
-## 🔐 Uso de autenticação (rápido)
+## 🔐 Autenticação
 
-* Faça `POST /users/login` com `username` (email) e `password` (form data).
-* Copie `access_token` do retorno.
-* Em requisições protegidas, adicione header:
+1. Faça `POST /users/login` com `username` (email) e `password` no formato form data.
+2. Copie o `access_token` da resposta.
+3. Nas rotas protegidas, envie o header:
 
 ```
 Authorization: Bearer <access_token>
 ```
 
-No Swagger UI: clique em **Authorize** e cole `Bearer <token>`.
+No Swagger UI: clique em **Authorize** e cole o token.
+
+O controle de acesso garante isolamento total de dados — usuários só acessam e modificam seus próprios recursos.
 
 ---
 
 ## 🧪 Testes
 
 ```bash
-# Com venv ativado
+# Executar todos os testes
 pytest -q
+
+# Com relatório de cobertura
+pytest --cov=app --cov-report=term-missing -q
 ```
 
-* O projeto inclui testes que usam SQLite em memória.
-* Os testes cobrem: criar usuário, login, criar tarefa e fluxo autenticado básico.
+**Resultado atual:**
+
+```
+15 passed in 10.53s
+Coverage: 89%
+```
+
+| Módulo | Cobertura |
+|--------|-----------|
+| `api/endpoints/tasks.py` | 92% |
+| `api/endpoints/users.py` | 90% |
+| `core/security.py` | 91% |
+| `schemas/user.py` | 95% |
+| `models/` | 100% |
+| `schemas/task.py` | 100% |
+
+Os testes usam banco SQLite em memória, isolando completamente o ambiente de teste do banco de desenvolvimento.
 
 ---
 
-## 🧭 Boas práticas e observações
+## 🧭 Decisões técnicas
 
-* Nunca commit seu `.env` ou secrets. Use `.gitignore` para `.env`.
-* Em produção, use PostgreSQL (defina `DATABASE_URL` apropriado).
-* Troque a `SECRET_KEY` se ela foi exposta em algum commit público.
-* Use `git-filter-repo` ou BFG caso precise remover secrets do histórico.
+**Separação em camadas (models / schemas / routes / services):** Isola responsabilidades — o modelo ORM não vaza para a API, o schema Pydantic valida a entrada antes de qualquer lógica de negócio.
+
+**SQLite em dev, PostgreSQL em produção:** Troca feita apenas via `DATABASE_URL` no `.env`, sem alteração de código — SQLAlchemy abstrai o dialeto.
+
+**JWT com controle de acesso por recurso:** Cada rota protegida extrai o usuário do token e valida se ele é o dono do recurso antes de qualquer operação — sem exposição cruzada de dados.
+
+**Pytest com banco em memória:** Testes rodam isolados sem dependência de banco externo, garantindo execução rápida e determinística em qualquer ambiente (local ou CI).
 
 ---
 
-## 📌 Próximas melhorias 
+## 📌 Próximas melhorias
 
-* Adicionar refresh tokens (segurança/UX)
-* Paginação e filtros nas rotas de tarefas
-* Melhoria das mensagens de erro e schemas de resposta
-* Documentação com exemplos de requests no README
+- Refresh tokens para renovação de sessão sem novo login
+- Paginação e filtros nas rotas de tarefas
+- Pipeline CI/CD com GitHub Actions (lint → test → build)
+- Migrations com Alembic para controle de schema em produção
 
 ---
 
 ## 👨‍💻 Autor
 
-Desenvolvido por **André Lopes**
-GitHub: [https://github.com/AndreLopes30](https://github.com/AndreLopes30)
+**André Ferreira**
+[GitHub](https://github.com/AndreLopes30) · [LinkedIn](https://www.linkedin.com/in/andre-ferreira30)
 
 ---
 
 ## 📝 Licença
 
-MIT — veja o arquivo `LICENSE` no repositório.
+MIT — veja o arquivo `LICENSE`.
