@@ -189,7 +189,7 @@ pytest -q
 
 ---
 
-## 📌 Próximas melhorias (opções realistas para nível júnior)
+## 📌 Próximas melhorias 
 
 * Adicionar refresh tokens (segurança/UX)
 * Paginação e filtros nas rotas de tarefas

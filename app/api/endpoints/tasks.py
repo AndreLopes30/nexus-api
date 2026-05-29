@@ -39,7 +39,7 @@ def update_task(task_id: int, tarefa: atualizarTarefa, current_user: str = Depen
     if tarefa_db.owner_id != owner.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Não autorizado")
     
-    for field, value in tarefa.dict(exclude_unset=True).items():
+    for field, value in tarefa.model_dump(exclude_unset=True).items():
         setattr(tarefa_db, field, value)
     
     db.commit()

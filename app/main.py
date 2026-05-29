@@ -9,12 +9,12 @@ from app.core.config import settings
 async def lifespan(app: FastAPI):
     if getattr(settings, "CREATE_TABLES_ON_STARTUP", False):
         create_tables()
-
+    
     log_level = getattr(settings, "LOG_LEVEL", "INFO")
     configure_logging(log_level)
     
-    yield 
-    
+    yield
+
 app = FastAPI(title="Nexus API", version="0.0.1", lifespan=lifespan)
 
 app.include_router(api_router)
