@@ -133,7 +133,23 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 DATABASE_URL=sqlite:///./nexus.db
 ```
 
-Crie as tabelas (primeira execução):
+Crie as tabelas (primeira execução) — usando Alembic (recomendado):
+
+```bash
+# Instale o Alembic no seu ambiente
+pip install alembic
+
+# Inicialize a pasta de migrations (apenas na primeira vez)
+alembic init alembic
+
+# Gere a revisão inicial com base nos modelos
+alembic revision --autogenerate -m "initial"
+
+# Aplique as migrations
+alembic upgrade head
+```
+
+Se preferir criar as tabelas manualmente (apenas para desenvolvimento local), você ainda pode usar:
 
 ```bash
 python -c "from app.db.database import Base, engine; Base.metadata.create_all(bind=engine)"

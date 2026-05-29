@@ -18,4 +18,11 @@ def get_db():
         db.close()
 
 def create_tables():
-    Base.metadata.create_all(bind=engine)
+    """Deprecated: prefer using Alembic migrations.
+
+    This function is kept for backward compatibility but will raise
+    a RuntimeError to encourage using Alembic.
+    """
+    raise RuntimeError(
+        "Use Alembic for schema migrations: `pip install alembic` and run `alembic upgrade head`."
+    )
