@@ -1,10 +1,21 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from app.api.api import api_router
 from app.db.database import create_tables
 from app.core.logging_config import configure_logging
 from app.core.config import settings
 
-app = FastAPI(title="Nexus API", version="0.0.1")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    if getattr(settings, "CREATE_TABLES_ON_STARTUP", False):
+        create_tables()
+
+    log_level = getattr(settings, "LOG_LEVEL", "INFO")
+    configure_logging(log_level)
+    
+    yield 
+    
+app = FastAPI(title="Nexus API", version="0.0.1", lifespan=lifespan)
 
 app.include_router(api_router)
 
