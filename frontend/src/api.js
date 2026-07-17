@@ -12,8 +12,25 @@ async function request(url, options = {}) {
   }
   const res = await fetch(`${API_BASE}${url}`, { ...options, headers });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.detail || 'Request failed');
+    let body;
+    try {
+      body = await res.json();
+    } catch {
+      body = { detail: await res.text() };
+    }
+    const detail = body?.detail;
+    // If the backend returns a list of validation errors (422)
+    if (Array.isArray(detail)) {
+      const msgs = detail
+        .map((err) => {
+          const loc = err.loc ? err.loc.join('.') : '';
+          const msg = err.msg || '';
+          return `${loc}: ${msg}`;
+        })
+        .join('\n');
+      throw new Error(msgs);
+    }
+    throw new Error(detail || `HTTP ${res.status}`);
   }
   if (res.status === 204) return null;
   return res.json();
