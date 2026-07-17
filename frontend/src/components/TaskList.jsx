@@ -83,31 +83,42 @@ export default function TaskList() {
   return (
     <div>
       <style>{`
-        .task-checkbox {
-          appearance: none;
+        .task-checkbox-round {
           -webkit-appearance: none;
+          appearance: none;
           width: 28px;
           height: 28px;
-          border-radius: 50%;
           border: 2px solid #aaa;
+          border-radius: 50%;
           background: #fff;
           cursor: pointer;
           outline: none;
-          transition: background 0.2s, border-color 0.2s;
+          transition: background-color 0.2s, border-color 0.2s;
+          position: relative;
           display: inline-block;
           margin: 0;
           padding: 0;
           box-sizing: border-box;
         }
-        .task-checkbox:checked {
+        .task-checkbox-round:checked {
           background: #4CAF50;
           border-color: #4CAF50;
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
-          background-size: 16px 16px;
-          background-position: center;
-          background-repeat: no-repeat;
         }
-        .task-checkbox:hover {
+        .task-checkbox-round:checked::after {
+          content: "✓";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: #fff;
+          font-size: 18px;
+          font-weight: bold;
+        }
+        .task-checkbox-round:focus {
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(76,175,80,0.3);
+        }
+        .task-checkbox-round:hover {
           border-color: #555;
         }
         .task-row.completed td:not(:first-child):not(:last-child) {
@@ -122,6 +133,24 @@ export default function TaskList() {
         }
         .table td:first-child {
           text-align: center;
+        }
+        .btn-edit, .btn-delete, .btn-save, .btn-cancel {
+          border-radius: 8px;
+          border: none;
+          padding: 6px 12px;
+          cursor: pointer;
+          outline: none;
+          transition: box-shadow 0.2s;
+        }
+        .btn-edit:focus, .btn-delete:focus, .btn-save:focus, .btn-cancel:focus {
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(33,150,243,0.3);
+        }
+        .btn-edit:hover, .btn-delete:hover, .btn-save:hover, .btn-cancel:hover {
+          opacity: 0.85;
+        }
+        input:focus, button:focus {
+          outline: none;
         }
       `}</style>
       <h2>Tarefas</h2>
@@ -161,7 +190,7 @@ export default function TaskList() {
               <td>
                 <input
                   type="checkbox"
-                  className="task-checkbox"
+                  className="task-checkbox-round"
                   checked={t.done}
                   onChange={() => handleToggleDone(t.id, t.done)}
                 />
