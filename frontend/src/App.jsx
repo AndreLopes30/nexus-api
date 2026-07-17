@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
-import Login from './components/Login';
-import Navbar from './components/Navbar';
-import UserList from './components/UserList';
-import TaskList from './components/TaskList';
+import Login from './components/Login.jsx';
+import Navbar from './components/Navbar.jsx';
+import UserList from './components/UserList.jsx';
+import TaskList from './components/TaskList.jsx';
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('access_token'));
