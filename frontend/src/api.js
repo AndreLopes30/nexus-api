@@ -73,7 +73,7 @@ export function listUsers() {
 }
 
 export function createUser(data) {
-  return request('/users/', { method: 'POST', body: JSON.stringify(data) });
+  return request('/users', { method: 'POST', body: JSON.stringify(data) });
 }
 
 export function updateUser(id, data) {
@@ -89,7 +89,7 @@ export function listTasks() {
 }
 
 export function createTask(data) {
-  return request('/tasks/', { method: 'POST', body: JSON.stringify(data) });
+  return request('/tasks', { method: 'POST', body: JSON.stringify(data) });
 }
 
 export function updateTask(id, data) {
