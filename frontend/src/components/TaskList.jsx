@@ -60,6 +60,15 @@ export default function TaskList() {
     }
   }
 
+  async function handleToggleDone(id, currentDone) {
+    try {
+      await updateTask(id, { done: !currentDone });
+      load();
+    } catch (e) {
+      alert('Erro ao alterar conclusão: ' + (e.message || e));
+    }
+  }
+
   async function handleDelete(id) {
     if (!window.confirm('Excluir esta tarefa?')) return;
     try {
@@ -72,6 +81,36 @@ export default function TaskList() {
 
   return (
     <div>
+      <style>{`
+        .checkbox-round {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          border: 2px solid #aaa;
+          background-color: #fff;
+          cursor: pointer;
+          transition: background-color 0.2s, border-color 0.2s;
+        }
+        .checkbox-round:checked {
+          background-color: #4CAF50;
+          border-color: #4CAF50;
+        }
+        .checkbox-round:focus {
+          outline: none;
+          box-shadow: 0 0 4px rgba(76,175,80,0.5);
+        }
+        .checkbox-round:hover {
+          border-color: #555;
+        }
+        .table td {
+          vertical-align: middle;
+        }
+        .table td:first-child {
+          text-align: center;
+        }
+      `}</style>
       <h2>Tarefas</h2>
       <form className="form-row" onSubmit={handleCreate}>
         <input placeholder="Título (obrigatório)" value={titulo} onChange={(e) => setTitulo(e.target.value)} required />
@@ -84,6 +123,7 @@ export default function TaskList() {
             <th>ID</th>
             <th>Título</th>
             <th>Descrição</th>
+            <th>Concluída</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -104,6 +144,14 @@ export default function TaskList() {
                 ) : (
                   t.description || ''
                 )}
+              </td>
+              <td>
+                <input
+                  type="checkbox"
+                  className="checkbox-round"
+                  checked={t.done}
+                  onChange={() => handleToggleDone(t.id, t.done)}
+                />
               </td>
               <td>
                 {editingId === t.id ? (
