@@ -82,7 +82,21 @@ export default function TaskList() {
   return (
     <div>
       <style>{`
-        .checkbox-round {
+        .checkbox-round-label {
+          position: relative;
+          display: inline-block;
+          width: 24px;
+          height: 24px;
+          cursor: pointer;
+          user-select: none;
+        }
+        .checkbox-round-input {
+          position: absolute;
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+        .checkbox-round-visual {
           display: inline-flex;
           align-items: center;
           justify-content: center;
@@ -91,15 +105,13 @@ export default function TaskList() {
           border-radius: 50%;
           border: 2px solid #aaa;
           background-color: #fff;
-          cursor: pointer;
           transition: background-color 0.2s, border-color 0.2s;
-          user-select: none;
         }
-        .checkbox-round.checked {
+        .checkbox-round-visual.checked {
           background-color: #4CAF50;
           border-color: #4CAF50;
         }
-        .checkbox-round:hover {
+        .checkbox-round-label:hover .checkbox-round-visual {
           border-color: #555;
         }
         .checkmark {
@@ -149,21 +161,17 @@ export default function TaskList() {
                 )}
               </td>
               <td>
-                <div
-                  className={`checkbox-round ${t.done ? 'checked' : ''}`}
-                  onClick={() => handleToggleDone(t.id, t.done)}
-                  role="checkbox"
-                  aria-checked={t.done}
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === ' ' || e.key === 'Enter') {
-                      e.preventDefault();
-                      handleToggleDone(t.id, t.done);
-                    }
-                  }}
-                >
-                  {t.done && <span className="checkmark">&#10003;</span>}
-                </div>
+                <label className="checkbox-round-label">
+                  <input
+                    type="checkbox"
+                    className="checkbox-round-input"
+                    checked={t.done}
+                    onChange={() => handleToggleDone(t.id, t.done)}
+                  />
+                  <span className={`checkbox-round-visual ${t.done ? 'checked' : ''}`}>
+                    {t.done && <span className="checkmark">&#10003;</span>}
+                  </span>
+                </label>
               </td>
               <td>
                 {editingId === t.id ? (
