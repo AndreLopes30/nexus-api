@@ -50,6 +50,11 @@ export default function TaskList() {
       const payload = {};
       if (edTitulo) payload.title = edTitulo;
       if (edDescricao) payload.description = edDescricao;
+      // Preserva o estado de conclusão da tarefa
+      const currentTask = tasks.find(t => t.id === id);
+      if (currentTask) {
+        payload.done = currentTask.done;
+      }
       await updateTask(id, payload);
       setEditingId(null);
       setEdTitulo('');
