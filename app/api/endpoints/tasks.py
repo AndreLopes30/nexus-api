@@ -10,7 +10,9 @@ from app.core.security import get_current_user
 router = APIRouter()
 
 def get_owner(db: Session, current_user: str) -> User:
-    owner = db.query(User).filter(User.email == current_user).first()
+    owner = db.query(User).filter(
+        (User.email == current_user) | (User.nome == current_user)
+    ).first()
     if not owner:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Usuário não encontrado")
     return owner
