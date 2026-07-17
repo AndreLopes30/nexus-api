@@ -82,42 +82,30 @@ export default function TaskList() {
   return (
     <div>
       <style>{`
-        .checkbox-round-label {
-          position: relative;
-          display: inline-block;
-          width: 24px;
-          height: 24px;
-          cursor: pointer;
-          user-select: none;
-        }
-        .checkbox-round-input {
-          position: absolute;
-          opacity: 0;
-          width: 0;
-          height: 0;
-        }
-        .checkbox-round-visual {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 24px;
-          height: 24px;
+        .checkbox-round {
+          appearance: none;
+          -webkit-appearance: none;
+          width: 20px;
+          height: 20px;
           border-radius: 50%;
           border: 2px solid #aaa;
-          background-color: #fff;
+          background: #fff;
+          cursor: pointer;
           transition: background-color 0.2s, border-color 0.2s;
         }
-        .checkbox-round-visual.checked {
-          background-color: #4CAF50;
+        .checkbox-round:checked {
+          background: #4CAF50;
           border-color: #4CAF50;
         }
-        .checkbox-round-label:hover .checkbox-round-visual {
+        .checkbox-round:focus {
+          outline: none;
+        }
+        .checkbox-round:hover {
           border-color: #555;
         }
-        .checkmark {
-          color: #fff;
-          font-size: 14px;
-          line-height: 1;
+        .task-row.completed td:not(:first-child):not(:last-child) {
+          text-decoration: line-through;
+          color: #999;
         }
         .table td {
           vertical-align: middle;
@@ -144,7 +132,7 @@ export default function TaskList() {
         </thead>
         <tbody>
           {tasks.map((t) => (
-            <tr key={t.id}>
+            <tr key={t.id} className={`task-row ${t.done ? 'completed' : ''}`}>
               <td>{t.id}</td>
               <td>
                 {editingId === t.id ? (
@@ -161,17 +149,12 @@ export default function TaskList() {
                 )}
               </td>
               <td>
-                <label className="checkbox-round-label">
-                  <input
-                    type="checkbox"
-                    className="checkbox-round-input"
-                    checked={t.done}
-                    onChange={() => handleToggleDone(t.id, t.done)}
-                  />
-                  <span className={`checkbox-round-visual ${t.done ? 'checked' : ''}`}>
-                    {t.done && <span className="checkmark">&#10003;</span>}
-                  </span>
-                </label>
+                <input
+                  type="checkbox"
+                  className="checkbox-round"
+                  checked={t.done}
+                  onChange={() => handleToggleDone(t.id, t.done)}
+                />
               </td>
               <td>
                 {editingId === t.id ? (
