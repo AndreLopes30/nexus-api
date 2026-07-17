@@ -23,6 +23,19 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="Nexus API", version="0.0.1", lifespan=lifespan)
 
 # ----------------------------------------------------------------------
+# CORS middleware logo no início para que ele atue inclusive em erros
+# ----------------------------------------------------------------------
+origins = settings.ALLOWED_ORIGINS.split(",") if settings.ALLOWED_ORIGINS else []
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ----------------------------------------------------------------------
 # Garantir que todos os erros (incluindo 401/422) sejam retornados como JSON
 # ----------------------------------------------------------------------
 @app.exception_handler(HTTPException)
@@ -39,26 +52,8 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         content={"detail": exc.errors()},
     )
 
-origins = settings.ALLOWED_ORIGINS.split(",") if settings.ALLOWED_ORIGINS else []
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 app.include_router(api_router)
 
 @app.get("/")
 def health_check():
     return {"status": "ok", "message": "Nexus API está no ar!"}
-
-@app.on_event("startup")
-def on_startup():
-    if getattr(settings, "CREATE_TABLES_ON_STARTUP", False):
-        create_tables()
-
-    log_level = getattr(settings, "LOG_LEVEL", "INFO")
-    configure_logging(log_level)
