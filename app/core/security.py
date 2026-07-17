@@ -1,3 +1,4 @@
+import logging
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
@@ -5,6 +6,8 @@ from typing import Optional
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from app.core.config import settings
+
+logger = logging.getLogger(__name__)
 
 SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = settings.ALGORITHM
@@ -35,9 +38,12 @@ def get_current_user(token: str = Depends(oauth2_scheme)) -> str:
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        logger.info("Token decodificado com sucesso: %s", payload)
         email: str = payload.get("sub")
         if email is None:
+            logger.warning("Token sem campo sub")
             raise credentials_exception
         return email
-    except JWTError:
+    except JWTError as e:
+        logger.error("Erro ao decodificar token: %s", e)
         raise credentials_exception

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { listUsers, createUser, updateUser, deleteUser } from '../api';
 
 export default function UserList() {
@@ -9,10 +9,7 @@ export default function UserList() {
   const [edNome, setEdNome] = useState('');
   const [edSenha, setEdSenha] = useState('');
 
-  const loaded = useRef(false);
   useEffect(() => {
-    if (loaded.current) return;
-    loaded.current = true;
     load();
   }, []);
 

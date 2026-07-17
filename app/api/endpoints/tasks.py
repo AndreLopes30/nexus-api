@@ -17,14 +17,20 @@ def get_owner(db: Session, current_user: str) -> User:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Usuário não encontrado")
     return owner
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 @router.get("/", response_model=List[lerTarefa])
 def list_tasks(current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
+    logger.info("list_tasks chamado para current_user=%s", current_user)
     owner = get_owner(db, current_user)
     tarefas = db.query(Task).filter(Task.owner_id == owner.id).all()
     return [lerTarefa.model_validate(t) for t in tarefas]
 
 @router.post("/", response_model=lerTarefa, status_code=status.HTTP_201_CREATED)
 def create_task(tarefa: criarTarefa, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
+    logger.info("create_task chamado para current_user=%s", current_user)
     owner = get_owner(db, current_user)
     tarefa_db = Task(title=tarefa.title, description=tarefa.description, owner_id=owner.id, done=False)
     db.add(tarefa_db)
@@ -34,6 +40,7 @@ def create_task(tarefa: criarTarefa, current_user: str = Depends(get_current_use
 
 @router.patch("/{task_id}", response_model=lerTarefa)
 def update_task(task_id: int, tarefa: atualizarTarefa, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
+    logger.info("update_task chamado para current_user=%s", current_user)
     owner = get_owner(db, current_user)
     tarefa_db = db.query(Task).filter(Task.id == task_id).first()
     if not tarefa_db:
@@ -50,6 +57,7 @@ def update_task(task_id: int, tarefa: atualizarTarefa, current_user: str = Depen
 
 @router.delete("/{task_id}")
 def delete_task(task_id: int, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
+    logger.info("delete_task chamado para current_user=%s", current_user)
     owner = get_owner(db, current_user)
     tarefa_db = db.query(Task).filter(Task.id == task_id).first()
     if not tarefa_db:
