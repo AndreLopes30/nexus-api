@@ -85,11 +85,11 @@ export default function TaskList() {
         .checkbox-round-label {
           position: relative;
           display: inline-block;
-          width: 24px;
-          height: 24px;
+          width: 36px;
+          height: 36px;
           cursor: pointer;
           user-select: none;
-          line-height: 24px;
+          line-height: 36px;
         }
         .checkbox-round-input {
           position: absolute;
@@ -99,8 +99,8 @@ export default function TaskList() {
         }
         .checkbox-round-visual {
           display: inline-block;
-          width: 24px;
-          height: 24px;
+          width: 36px;
+          height: 36px;
           border-radius: 50%;
           border: 2px solid #aaa;
           background: #fff;
@@ -118,7 +118,7 @@ export default function TaskList() {
           left: 50%;
           transform: translate(-50%, -50%);
           color: #fff;
-          font-size: 16px;
+          font-size: 22px;
           font-weight: bold;
         }
         .checkbox-round-label:hover .checkbox-round-visual {
