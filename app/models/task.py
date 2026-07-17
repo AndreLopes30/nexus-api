@@ -9,5 +9,6 @@ class Task(Base):
     description = Column(String, nullable=True)
     done = Column(Boolean, default=False)
     priority = Column(Integer, default=0)
+    workspace_id = Column(Integer, default=0, nullable=False)
 
     owner_id = Column(Integer, ForeignKey("users.id"))
