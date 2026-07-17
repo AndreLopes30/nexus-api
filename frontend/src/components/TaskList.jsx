@@ -37,15 +37,6 @@ export default function TaskList() {
     }
   }
 
-  async function handleToggleDone(task) {
-    try {
-      await updateTask(task.id, { done: !task.done });
-      await load();
-    } catch (e) {
-      alert(e.message);
-    }
-  }
-
   async function handleUpdate(id) {
     const payload = {};
     if (editTitle) payload.title = editTitle;
@@ -90,13 +81,7 @@ export default function TaskList() {
       </form>
       <div className="task-list">
         {tasks.map((t) => (
-          <div key={t.id} className={`task-item${t.done ? ' completed' : ''}`}>
-            <input
-              type="checkbox"
-              className="task-checkbox"
-              checked={t.done}
-              onChange={() => handleToggleDone(t)}
-            />
+          <div key={t.id} className="task-item">
             {editId === t.id ? (
               <div className="edit-row">
                 <input
