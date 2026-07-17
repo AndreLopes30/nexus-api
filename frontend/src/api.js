@@ -1,4 +1,4 @@
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 function getToken() {
   return localStorage.getItem('access_token');
@@ -20,12 +20,13 @@ async function request(url, options = {}) {
 }
 
 export function loginAPI(username, password) {
-  const formData = new FormData();
-  formData.append('username', username);
-  formData.append('password', password);
+  const params = new URLSearchParams();
+  params.append('username', username);
+  params.append('password', password);
   return fetch(`${API_BASE}/users/login`, {
     method: 'POST',
-    body: formData,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params,
   }).then(r => r.json());
 }
 
