@@ -92,9 +92,7 @@ export default function TaskList() {
     <div>
       <style>{`
         .checkbox-round {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
+          display: inline-block;
           width: 28px;
           height: 28px;
           border-radius: 50%;
@@ -102,7 +100,10 @@ export default function TaskList() {
           background: #fff;
           cursor: pointer;
           user-select: none;
+          position: relative;
           transition: background 0.2s, border-color 0.2s;
+          text-align: center;
+          line-height: 28px;
         }
         .checkbox-round.checked {
           background: #4CAF50;
@@ -170,7 +171,7 @@ export default function TaskList() {
                 )}
               </td>
               <td>
-                <span
+                <div
                   className={`checkbox-round ${t.done ? 'checked' : ''}`}
                   onClick={() => handleToggleDone(t.id, t.done)}
                   role="checkbox"
@@ -184,7 +185,7 @@ export default function TaskList() {
                   }}
                 >
                   {t.done && <span className="checkmark">&#10003;</span>}
-                </span>
+                </div>
               </td>
               <td>
                 {editingId === t.id ? (
