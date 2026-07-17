@@ -25,22 +25,14 @@ def list_users(current_user: str = Depends(get_current_user), db: Session = Depe
 @router.post("/", response_model=lerUsuario, status_code=201)
 def create_user(usuario: criarUsuario, db: Session = Depends(get_db)):
     hashed_password = get_password_hash(usuario.senha)
-    # Usa o nome como email se nenhum email foi fornecido
-    if not usuario.email:
-        user_email = usuario.nome
-    else:
-        user_email = usuario.email
-    if not user_email:
-        raise HTTPException(status_code=400, detail="Nome é obrigatório para criar usuário")
-    usuario_db = User(nome=usuario.nome, email=user_email, hashed_password=hashed_password)
+    # Verifica se já existe email
+    if db.query(User).filter(User.email == usuario.email).first():
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email já cadastrado")
+    usuario_db = User(nome=usuario.nome, email=usuario.email, hashed_password=hashed_password)
     db.add(usuario_db)
-    try:
-        db.commit()
-        db.refresh(usuario_db)
-        return lerUsuario.model_validate(usuario_db)
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email já cadastrado (usuário com este nome já existe)")
+    db.commit()
+    db.refresh(usuario_db)
+    return lerUsuario.model_validate(usuario_db)
 
 @router.get("/{user_id}", response_model=lerUsuario)
 def get_user(user_id: int, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):

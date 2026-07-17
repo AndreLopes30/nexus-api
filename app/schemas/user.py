@@ -1,8 +1,8 @@
 from pydantic import BaseModel, field_validator, ConfigDict
 
 class criarUsuario(BaseModel):
-    nome: str | None = None
-    email: str | None = None
+    nome: str
+    email: str
     senha: str
 
     @field_validator("senha")
