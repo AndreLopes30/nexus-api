@@ -1,3 +1,49 @@
-export default function Login() {
-  return <div />;
+import { useState } from 'react';
+import { loginAPI } from '../api';
+
+export default function Login({ onLogin }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    try {
+      const data = await loginAPI(username, password);
+      if (data.access_token) {
+        onLogin(data.access_token);
+      } else {
+        setError('Credenciais inválidas');
+      }
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  return (
+    <div className="login-page">
+      <div className="login-card">
+        <h2>Login</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Usuário ou email"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Senha"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit">Entrar</button>
+        </form>
+        {error && <p className="error">{error}</p>}
+      </div>
+    </div>
+  );
 }
