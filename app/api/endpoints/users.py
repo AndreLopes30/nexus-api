@@ -44,7 +44,7 @@ def update_user(user_id: int, usuario: atualizarUsuario, current_user: str = Dep
     usuario_db = get_user_or_404(db, user_id)
 
     if usuario_db.email != current_user:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Não autorizado")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Você só pode editar seu próprio perfil")
 
     for field, value in usuario.model_dump(exclude_unset=True).items():
         if field == "senha":
@@ -60,7 +60,7 @@ def update_user(user_id: int, usuario: atualizarUsuario, current_user: str = Dep
 def delete_user(user_id: int, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
     usuario_db = get_user_or_404(db, user_id)
     if usuario_db.email != current_user:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Não autorizado")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Você só pode excluir seu próprio perfil")
     db.delete(usuario_db)
     db.commit()
     return {"message": "Usuário deletado com sucesso!"}
