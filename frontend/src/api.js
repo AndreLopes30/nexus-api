@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE = import.meta.env.VITE_API_URL || '';
 
 function getToken() {
   return localStorage.getItem('access_token');
@@ -15,15 +15,15 @@ async function request(url, options = {}) {
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   } else {
-    // No token stored, cannot make authenticated requests
     throw new Error('Sessão expirada. Faça login novamente.');
   }
-  console.log('[request] URL:', `${API_BASE}${url}`, 'Token:', token ? token.slice(0,10)+'...' : 'none');
+  const fullUrl = `${API_BASE}${url}`;
+  console.log('[request] URL:', fullUrl, 'Token:', token ? token.slice(0,10)+'...' : 'none');
   let res;
   try {
-    res = await fetch(`${API_BASE}${url}`, { ...options, headers });
+    res = await fetch(fullUrl, { ...options, headers });
   } catch (e) {
-    throw new Error(`Não foi possível conectar ao servidor (${API_BASE}${url}). Verifique se o backend está rodando em http://localhost:8000`);
+    throw new Error(`Não foi possível conectar ao servidor (${fullUrl}). Verifique se o backend está rodando.`);
   }
   if (!res.ok) {
     let body;
@@ -33,7 +33,6 @@ async function request(url, options = {}) {
       body = { detail: await res.text() };
     }
     const detail = body?.detail;
-    // If the backend returns a list of validation errors (422)
     if (Array.isArray(detail)) {
       const msgs = detail
         .map((err) => {
@@ -44,11 +43,8 @@ async function request(url, options = {}) {
         .join('\n');
       throw new Error(msgs);
     }
-    // If the error is due to authentication, force logout and refresh
-    // (also handles cases where the status code is 422 but the detail indicates authentication failure)
     if (res.status === 401 || (typeof detail === 'string' && detail.includes('Not authenticated'))) {
       forceLogout();
-      // Prevent further code after reload
       throw new Error('Sessão expirada. Faça login novamente.');
     }
     throw new Error(detail || `HTTP ${res.status}`);
@@ -69,7 +65,7 @@ export function loginAPI(username, password) {
 }
 
 export function listUsers() {
-  return request('/users/');
+  return request('/users');
 }
 
 export function createUser(data) {
@@ -85,7 +81,7 @@ export function deleteUser(id) {
 }
 
 export function listTasks() {
-  return request('/tasks/');
+  return request('/tasks');
 }
 
 export function createTask(data) {
