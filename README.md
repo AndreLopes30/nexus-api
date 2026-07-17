@@ -10,7 +10,7 @@
 
 > [Português](#) | [English version below](#-nexus-api--english)
 
-API REST desenvolvida em **Python** com **FastAPI** para gerenciamento de usuários e tarefas, com autenticação JWT, arquitetura modular em camadas, migrations com Alembic, CI/CD com GitHub Actions e 89% de cobertura de testes com Pytest.
+API REST desenvolvida em **Python** com **FastAPI** para gerenciamento de usuários e tarefas, com autenticação JWT, arquitetura modular em camadas, migrations com Alembic, CI/CD com GitHub Actions e 90% de cobertura de testes com Pytest.
 
 **[🟢 API em produção](https://nexus-api-7q6p.onrender.com/docs)**
 
@@ -76,7 +76,7 @@ nexus/
 │   │   └── token.py            # Schema de token JWT
 │   └── main.py                 # Entry point FastAPI
 ├── Tests/
-│   └── test_api.py             # 15 testes — 89% de cobertura total
+│   └── test_api.py             # 16 testes — 90% de cobertura total
 ├── docker-compose.yml
 ├── Dockerfile
 ├── alembic.ini
@@ -303,7 +303,7 @@ MIT — veja o arquivo `LICENSE`.
 ![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
 ![Tests](https://img.shields.io/badge/tests-16%20passed-brightgreen)
 
-REST API built with **Python** and **FastAPI** for user and task management, featuring JWT authentication, layered architecture, Alembic migrations, GitHub Actions CI/CD, and 89% test coverage with Pytest.
+REST API built with **Python** and **FastAPI** for user and task management, featuring JWT authentication, layered architecture, Alembic migrations, GitHub Actions CI/CD, and 90% test coverage with Pytest.
 
 **[🟢 Live API](https://nexus-api-7q6p.onrender.com/docs)**
 
@@ -395,7 +395,7 @@ pytest -q
 pytest --cov=app --cov-report=term-missing -q
 ```
 
-**Current result: 15 passed — 89% coverage**
+**Current result: 16 passed — 90% coverage**
 
 ---
 
