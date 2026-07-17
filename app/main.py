@@ -37,19 +37,36 @@ app.add_middleware(
 
 # ----------------------------------------------------------------------
 # Garantir que todos os erros (incluindo 401/422) sejam retornados como JSON
+# com cabeçalhos CORS adequados
 # ----------------------------------------------------------------------
+def _get_cors_headers(request: Request) -> dict:
+    origin = request.headers.get("origin", "")
+    allowed = settings.ALLOWED_ORIGINS.split(",") if settings.ALLOWED_ORIGINS else []
+    if origin in [o.strip() for o in allowed]:
+        return {
+            "Access-Control-Allow-Origin": origin,
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+        }
+    return {}
+
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
+    headers = _get_cors_headers(request)
     return JSONResponse(
         status_code=exc.status_code,
         content={"detail": exc.detail},
+        headers=headers,
     )
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    headers = _get_cors_headers(request)
     return JSONResponse(
         status_code=422,
         content={"detail": exc.errors()},
+        headers=headers,
     )
 
 app.include_router(api_router)
