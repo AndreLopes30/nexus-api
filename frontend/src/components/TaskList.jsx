@@ -83,28 +83,36 @@ export default function TaskList() {
   return (
     <div>
       <style>{`
-        .task-checkbox-round {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 28px;
-          height: 28px;
-          border: 2px solid #aaa;
-          border-radius: 50%;
-          background: #fff;
-          cursor: pointer;
-          outline: none;
-          transition: background-color 0.2s, border-color 0.2s;
+        .checkbox-round-wrapper {
           position: relative;
           display: inline-block;
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
+          width: 28px;
+          height: 28px;
+          cursor: pointer;
+          user-select: none;
         }
-        .task-checkbox-round:checked {
+        .checkbox-round-wrapper input {
+          position: absolute;
+          opacity: 0;
+          width: 0;
+          height: 0;
+          outline: none;
+        }
+        .checkbox-round-custom {
+          display: inline-block;
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          border: 2px solid #aaa;
+          background: #fff;
+          transition: background 0.2s, border-color 0.2s;
+          position: relative;
+        }
+        .checkbox-round-custom.checked {
           background: #4CAF50;
           border-color: #4CAF50;
         }
-        .task-checkbox-round:checked::after {
+        .checkbox-round-custom.checked::after {
           content: "✓";
           position: absolute;
           top: 50%;
@@ -114,11 +122,7 @@ export default function TaskList() {
           font-size: 18px;
           font-weight: bold;
         }
-        .task-checkbox-round:focus {
-          outline: none;
-          box-shadow: 0 0 0 2px rgba(76,175,80,0.3);
-        }
-        .task-checkbox-round:hover {
+        .checkbox-round-wrapper:hover .checkbox-round-custom {
           border-color: #555;
         }
         .task-row.completed td:not(:first-child):not(:last-child) {
@@ -188,12 +192,14 @@ export default function TaskList() {
                 )}
               </td>
               <td>
-                <input
-                  type="checkbox"
-                  className="task-checkbox-round"
-                  checked={t.done}
-                  onChange={() => handleToggleDone(t.id, t.done)}
-                />
+                <label className="checkbox-round-wrapper">
+                  <input
+                    type="checkbox"
+                    checked={t.done}
+                    onChange={() => handleToggleDone(t.id, t.done)}
+                  />
+                  <span className={`checkbox-round-custom ${t.done ? 'checked' : ''}`}></span>
+                </label>
               </td>
               <td>
                 {editingId === t.id ? (
