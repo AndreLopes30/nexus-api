@@ -1,3 +1,4 @@
+import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -74,10 +75,11 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 # ----------------------------------------------------------------------
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
+    logging.getLogger(__name__).exception("Erro interno do servidor")
     headers = _get_cors_headers(request)
     return JSONResponse(
         status_code=500,
-        content={"detail": "Erro interno do servidor"},
+        content={"detail": str(exc)},
         headers=headers,
     )
 
