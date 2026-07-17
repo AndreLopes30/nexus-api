@@ -1,390 +1,49 @@
-/* =============================================
-   Design System • Nexus (reiniciado – moderno e limpo)
-   ============================================= */
-@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
-
 :root {
-  --primary: #4f46e5;
-  --primary-light: #818cf8;
-  --primary-dark: #3730a3;
-  --surface: #ffffff;
-  --background: #f8fafc;
-  --text: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
-  --border: #e2e8f0;
-  --success: #22c55e;
-  --danger: #ef4444;
-  --warning: #f59e0b;
-  --shadow-xs: 0 1px 2px rgba(0,0,0,0.03), 0 1px 1px rgba(0,0,0,0.01);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -5px rgba(0,0,0,0.04);
-  --radius: 12px;
-  --radius-sm: 8px;
-  --radius-xs: 6px;
-  --font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --transition: 180ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: var(--font);
-  background: var(--background);
-  color: var(--text);
-  line-height: 1.65;
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: #213547;
+  background-color: #ffffff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-input:focus, button:focus {
-  outline: none;
-  box-shadow: none !important;
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
 }
-
-/* ---- Tipografia ---- */
-h1, h2, h3 {
-  font-weight: 600;
-  letter-spacing: -0.02em;
+a:hover {
+  color: #535bf2;
 }
-
-/* ---- Inputs / Botões ---- */
-input, button, textarea {
-  font-family: inherit;
-  font-size: 0.9rem;
-  outline: none;
-  transition: var(--transition);
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
 }
-
-input {
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-xs);
-  padding: 0.7rem 0.9rem;
-  color: var(--text);
-  width: 100%;
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
 }
-
-input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
-}
-
 button {
-  cursor: pointer;
-  border: none;
-  background: transparent;
-  font-weight: 500;
-  border-radius: var(--radius-xs);
-  padding: 0.5rem 1.2rem;
-}
-
-/* ---- Card / Container ---- */
-.app-container {
-  max-width: 1080px;
-  margin: 2.5rem auto;
-  background: var(--surface);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
-}
-
-/* ---- Navbar ---- */
-.navbar {
-  display: flex;
-  align-items: center;
-  background: var(--surface);
-  padding: 1rem 2rem;
-  gap: 0.75rem;
-  border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow-xs);
-}
-
-.navbar .nav-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 0.55rem 1.15rem;
-  border-radius: var(--radius-xs);
-  transition: var(--transition);
-}
-
-.navbar .nav-btn:hover {
-  background: #f1f5f9;
-  color: var(--primary);
-}
-
-.navbar .nav-btn.active {
-  background: #eef2ff;
-  color: var(--primary);
-  font-weight: 600;
-  box-shadow: inset 0 -2px 0 var(--primary);
-}
-
-.navbar .logout-btn {
-  margin-left: auto;
-  background: transparent;
-  border: 1.5px solid var(--border);
-  color: var(--text-secondary);
-  padding: 0.5rem 1.2rem;
-  border-radius: var(--radius-xs);
-  font-size: 0.85rem;
-  transition: var(--transition);
-}
-
-.navbar .logout-btn:hover {
-  border-color: var(--danger);
-  color: var(--danger);
-  background: #fef2f2;
-}
-
-/* ---- Login ---- */
-.login-wrapper {
-  max-width: 380px;
-  margin: 6rem auto;
-  padding: 2.5rem 2rem;
-  text-align: center;
-  background: var(--surface);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-xl);
-}
-
-.login-wrapper h2 {
-  margin-bottom: 2rem;
-  font-weight: 700;
-  color: var(--text);
-  font-size: 1.5rem;
-}
-
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.login-form button {
-  padding: 0.8rem;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-xs);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  font-size: 1rem;
-  transition: var(--transition);
-  box-shadow: var(--shadow-sm);
-}
-
-.login-form button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
-}
-
-.error-msg {
-  color: var(--danger);
-  margin-top: 0.75rem;
-  font-size: 0.85rem;
-}
-
-/* ---- Content ---- */
-.content {
-  padding: 2rem;
-}
-
-.content h2 {
-  margin-bottom: 1.5rem;
-  font-weight: 700;
-  color: var(--text);
-  font-size: 1.35rem;
-}
-
-/* ---- Form Row ---- */
-.form-row {
-  display: flex;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.form-row input {
-  flex: 1;
-  min-width: 160px;
-}
-
-.form-row button {
-  padding: 0.6rem 1.5rem;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-xs);
-  font-weight: 600;
-  transition: var(--transition);
-  box-shadow: var(--shadow-sm);
-}
-
-.form-row button:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
-  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
-}
-
-/* ---- Table ---- */
-.table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-}
-
-.table thead tr {
-  background: #f1f5f9;
-}
-
-.table th,
-.table td {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--border);
-  text-align: left;
-  font-size: 0.9rem;
-}
-
-.table th {
-  font-weight: 600;
-  color: var(--text-secondary);
-  letter-spacing: 0.03em;
-  font-size: 0.85rem;
-}
-
-.table tbody tr:nth-child(even) {
-  background: #f8fafc;
-}
-
-.table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.table tbody tr:hover {
-  background: #eff6ff;
-  transition: var(--transition);
-}
-
-/* --- Action Buttons inside table cells --- */
-.table td .btn-edit,
-.table td .btn-save,
-.table td .btn-cancel,
-.table td .btn-delete {
-  padding: 0.35rem 0.7rem;
-  border: 1.5px solid transparent;
   border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #f9f9f9;
   cursor: pointer;
-  font-size: 0.8rem;
-  background: transparent;
-  font-weight: 600;
-  transition: var(--transition);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
+  transition: border-color 0.25s;
 }
-
-.table td .btn-edit {
-  color: var(--primary);
-  border-color: var(--primary);
+button:hover {
+  border-color: #646cff;
 }
-
-.table td .btn-edit:hover {
-  background: #eef2ff;
-  transform: translateY(-1px);
-}
-
-.table td .btn-save {
-  color: var(--success);
-  border-color: var(--success);
-}
-
-.table td .btn-save:hover {
-  background: #f0fdf4;
-  transform: translateY(-1px);
-}
-
-.table td .btn-cancel {
-  color: var(--text-muted);
-  border-color: var(--text-muted);
-}
-
-.table td .btn-cancel:hover {
-  background: #f8fafc;
-  transform: translateY(-1px);
-}
-
-.table td .btn-delete {
-  color: var(--danger);
-  border-color: var(--danger);
-}
-
-.table td .btn-delete:hover {
-  background: #fef2f2;
-  transform: translateY(-1px);
-}
-
-/* ---- Ícones inline com pseudo-elementos ---- */
-.btn-edit::before  { content: '✎\00a0'; }
-.btn-save::before  { content: '💾\00a0'; }
-.btn-cancel::before { content: '✕\00a0'; }
-.btn-delete::before { content: '🗑\00a0'; }
-
-/* ---- Responsivo ---- */
-@media (max-width: 768px) {
-  .app-container {
-    margin: 1rem 0.75rem;
-    border-radius: var(--radius-sm);
-  }
-  .navbar {
-    padding: 0.75rem 1rem;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-  }
-  .navbar .nav-btn {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.8rem;
-  }
-  .navbar .logout-btn {
-    margin-left: 0;
-    margin-top: 0.25rem;
-    width: 100%;
-  }
-  .form-row {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .form-row input {
-    min-width: unset;
-  }
-  .table th,
-  .table td {
-    padding: 0.5rem 0.6rem;
-  }
-  .login-wrapper {
-    margin: 2rem 1rem;
-    padding: 1.5rem;
-  }
-  .btn-edit::before,
-  .btn-save::before,
-  .btn-cancel::before,
-  .btn-delete::before {
-    content: '' !important;
-  }
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
 }
