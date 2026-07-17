@@ -90,46 +90,35 @@ export default function TaskList() {
   return (
     <div>
       <style>{`
-        .container-cb {
-          position: relative;
-          display: inline-block;
-          width: 28px;
-          height: 28px;
-          cursor: pointer;
-          user-select: none;
-        }
-        .container-cb input {
-          position: absolute;
-          opacity: 0;
-          width: 0;
-          height: 0;
-          outline: none;
-        }
-        .checkmark-rc {
-          display: inline-block;
+        .checkbox-round-custom {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
           width: 28px;
           height: 28px;
           border-radius: 50%;
           border: 2px solid #aaa;
           background: #fff;
+          cursor: pointer;
+          user-select: none;
           transition: background 0.2s, border-color 0.2s;
           position: relative;
         }
-        .checkmark-rc.checked {
+        .checkbox-round-custom.checked {
           background: #4CAF50;
           border-color: #4CAF50;
         }
-        .checkmark-rc.checked::after {
+        .checkbox-round-custom.checked::after {
           content: "✓";
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
           color: #fff;
-          font-size: 16px;
+          font-size: 18px;
           font-weight: bold;
         }
-        .container-cb:hover .checkmark-rc {
+        .checkbox-round-custom:focus {
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(76,175,80,0.4);
+        }
+        .checkbox-round-custom:hover {
           border-color: #555;
         }
         .task-row.completed td:not(:first-child):not(:last-child) {
@@ -181,16 +170,19 @@ export default function TaskList() {
                 )}
               </td>
               <td>
-                <label className="container-cb">
-                  <input
-                    type="checkbox"
-                    checked={t.done}
-                    onChange={() => handleToggleDone(t.id, t.done)}
-                  />
-                  <div
-                    className={`checkmark-rc ${t.done ? 'checked' : ''}`}
-                  ></div>
-                </label>
+                <div
+                  className={`checkbox-round-custom ${t.done ? 'checked' : ''}`}
+                  onClick={() => handleToggleDone(t.id, t.done)}
+                  role="checkbox"
+                  aria-checked={t.done}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === ' ' || e.key === 'Enter') {
+                      e.preventDefault();
+                      handleToggleDone(t.id, t.done);
+                    }
+                  }}
+                ></div>
               </td>
               <td>
                 {editingId === t.id ? (
