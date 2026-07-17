@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime, func
 from app.models.base import Base
 
 class Task(Base):
@@ -10,5 +10,6 @@ class Task(Base):
     done = Column(Boolean, default=False)
     priority = Column(Integer, default=0)
     workspace_id = Column(Integer, default=0, nullable=False)
+    created_at = Column(DateTime, default=func.now, nullable=False)
 
     owner_id = Column(Integer, ForeignKey("users.id"))
