@@ -25,7 +25,9 @@ def list_users(current_user: str = Depends(get_current_user), db: Session = Depe
 @router.post("/", response_model=lerUsuario, status_code=201)
 def create_user(usuario: criarUsuario, db: Session = Depends(get_db)):
     hashed_password = get_password_hash(usuario.senha)
-    usuario_db = User(nome=usuario.nome, email=usuario.email, hashed_password=hashed_password)
+    # Se e‑mail não foi enviado, gera um a partir do nome
+    user_email = usuario.email or (f"{usuario.nome}@placeholder.com" if usuario.nome else "unknown@placeholder.com")
+    usuario_db = User(nome=usuario.nome, email=user_email, hashed_password=hashed_password)
     db.add(usuario_db)
     try:
         db.commit()
@@ -38,7 +40,7 @@ def create_user(usuario: criarUsuario, db: Session = Depends(get_db)):
 @router.get("/{user_id}", response_model=lerUsuario)
 def get_user(user_id: int, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
     usuario = get_user_or_404(db, user_id)
-    return lerUsuario.model_validate(usuario_db)
+    return lerUsuario.model_validate(usuario)
 
 @router.patch("/{user_id}", response_model=lerUsuario)
 def update_user(user_id: int, usuario: atualizarUsuario, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
