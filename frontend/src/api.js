@@ -5,6 +5,7 @@ function getToken() {
 }
 
 let sessionExpiredDispatched = false;
+window.__allowSessionExpired = true;
 
 async function request(url, options = {}) {
   const headers = { 'Content-Type': 'application/json' };
@@ -41,17 +42,21 @@ async function request(url, options = {}) {
       throw new Error(msgs);
     }
     if (res.status === 401 || (typeof detail === 'string' && detail.includes('Not authenticated'))) {
-      // Dispara evento apenas uma vez para evitar loop
-      if (!sessionExpiredDispatched) {
-        sessionExpiredDispatched = true;
-        window.dispatchEvent(new CustomEvent('session-expired'));
+      // Dispara evento apenas se permitido (não imediatamente após login)
+      if (window.__allowSessionExpired !== false) {
+        // Dispara evento apenas uma vez para evitar loop
+        if (!sessionExpiredDispatched) {
+          sessionExpiredDispatched = true;
+          window.dispatchEvent(new CustomEvent('session-expired'));
+        }
       }
       throw new Error('Sessão expirada. Faça login novamente.');
     }
     throw new Error(detail || `HTTP ${res.status}`);
   }
-  // Após uma requisição bem‑sucedida, reseta o flag para futuras detecções
+  // Após uma requisição bem‑sucedida, reseta os flags para futuras detecções
   sessionExpiredDispatched = false;
+  window.__allowSessionExpired = true;
   if (res.status === 204) return null;
   return res.json();
 }

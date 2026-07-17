@@ -11,6 +11,8 @@ function App() {
   const handleLogin = (t) => {
     localStorage.setItem('access_token', t);
     setToken(t);
+    window.__allowSessionExpired = false;
+    setTimeout(() => { window.__allowSessionExpired = true; }, 1500);
   };
   const handleLogout = () => {
     localStorage.removeItem('access_token');
