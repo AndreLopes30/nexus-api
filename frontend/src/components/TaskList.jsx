@@ -34,8 +34,8 @@ export default function TaskList() {
     }
     const descriptionTrim = descricao.trim() || null;
     try {
-      const payload = { title: titleTrim };
-      if (descriptionTrim) payload.description = descriptionTrim;
+      const payload = { titulo: titleTrim };
+      if (descriptionTrim) payload.descricao = descriptionTrim;
       await createTask(payload);
       setTitulo('');
       setDescricao('');
@@ -48,8 +48,8 @@ export default function TaskList() {
   async function handleUpdate(id) {
     try {
       const payload = {};
-      if (edTitulo) payload.title = edTitulo;
-      if (edDescricao) payload.description = edDescricao;
+      if (edTitulo) payload.titulo = edTitulo;
+      if (edDescricao) payload.descricao = edDescricao;
       await updateTask(id, payload);
       setEditingId(null);
       setEdTitulo('');
