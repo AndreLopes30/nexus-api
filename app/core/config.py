@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     SQLALCHEMY_ECHO: bool = False
     LOG_LEVEL: str = "INFO"
     CREATE_TABLES_ON_STARTUP: bool = False
+    ALLOWED_ORIGINS: str = "http://localhost:3000"
 
 
 settings = Settings()

@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.api.api import api_router
 from app.db.database import create_tables
 from app.core.logging_config import configure_logging
@@ -16,6 +17,16 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(title="Nexus API", version="0.0.1", lifespan=lifespan)
+
+origins = settings.ALLOWED_ORIGINS.split(",") if settings.ALLOWED_ORIGINS else []
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(api_router)
 
