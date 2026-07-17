@@ -3,8 +3,8 @@
 ![CI](https://github.com/AndreLopes30/nexus-api/actions/workflows/ci.yml/badge.svg)
 ![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Modern%20API-green)
-![Coverage](https://img.shields.io/badge/coverage-89%25-brightgreen)
-![Tests](https://img.shields.io/badge/tests-15%20passed-brightgreen)
+![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
+![Tests](https://img.shields.io/badge/tests-16%20passed-brightgreen)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
@@ -231,7 +231,7 @@ pytest --cov=app --cov-report=term-missing -q
 **Resultado atual:**
 
 ```
-15 passed in 10.53s — Coverage: 89%
+16 passed in 11.02s — Coverage: 90%
 ```
 
 | Módulo | Cobertura |
@@ -300,8 +300,8 @@ MIT — veja o arquivo `LICENSE`.
 # 🚀 Nexus API — English
 
 ![CI](https://github.com/AndreLopes30/nexus-api/actions/workflows/ci.yml/badge.svg)
-![Coverage](https://img.shields.io/badge/coverage-89%25-brightgreen)
-![Tests](https://img.shields.io/badge/tests-15%20passed-brightgreen)
+![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
+![Tests](https://img.shields.io/badge/tests-16%20passed-brightgreen)
 
 REST API built with **Python** and **FastAPI** for user and task management, featuring JWT authentication, layered architecture, Alembic migrations, GitHub Actions CI/CD, and 89% test coverage with Pytest.
 
