@@ -91,47 +91,35 @@ export default function TaskList() {
   return (
     <div>
       <style>{`
-        .checkbox-round-label {
-          position: relative;
-          display: inline-block;
-          width: 28px;
-          height: 28px;
-          cursor: pointer;
-          user-select: none;
-          line-height: 28px;
-        }
-        .checkbox-round-input {
-          position: absolute;
-          opacity: 0;
-          width: 0;
-          height: 0;
-        }
-        .checkbox-round-visual {
-          display: inline-block;
+        .checkbox-round {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
           width: 28px;
           height: 28px;
           border-radius: 50%;
           border: 2px solid #aaa;
           background: #fff;
+          cursor: pointer;
+          user-select: none;
           transition: background 0.2s, border-color 0.2s;
-          position: relative;
         }
-        .checkbox-round-visual.checked {
+        .checkbox-round.checked {
           background: #4CAF50;
           border-color: #4CAF50;
         }
-        .checkbox-round-visual.checked::after {
-          content: '✓';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
+        .checkbox-round:focus {
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(76,175,80,0.4);
+        }
+        .checkbox-round:hover {
+          border-color: #555;
+        }
+        .checkmark {
           color: #fff;
           font-size: 16px;
           font-weight: bold;
-        }
-        .checkbox-round-label:hover .checkbox-round-visual {
-          border-color: #555;
+          line-height: 1;
         }
         .task-row.completed td:not(:first-child):not(:last-child) {
           text-decoration: line-through;
@@ -182,15 +170,21 @@ export default function TaskList() {
                 )}
               </td>
               <td>
-                <label className="checkbox-round-label">
-                  <input
-                    type="checkbox"
-                    className="checkbox-round-input"
-                    checked={t.done}
-                    onChange={() => handleToggleDone(t.id, t.done)}
-                  />
-                  <span className={`checkbox-round-visual ${t.done ? 'checked' : ''}`}></span>
-                </label>
+                <span
+                  className={`checkbox-round ${t.done ? 'checked' : ''}`}
+                  onClick={() => handleToggleDone(t.id, t.done)}
+                  role="checkbox"
+                  aria-checked={t.done}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === ' ' || e.key === 'Enter') {
+                      e.preventDefault();
+                      handleToggleDone(t.id, t.done);
+                    }
+                  }}
+                >
+                  {t.done && <span className="checkmark">&#10003;</span>}
+                </span>
               </td>
               <td>
                 {editingId === t.id ? (
