@@ -1,23 +1,31 @@
-/* ===== Design System ===== */
+/* =============================================
+   Design System • Nexus (inspirado em Material / Tailwind)
+   ============================================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+
 :root {
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
+  --primary: #4f46e5;
+  --primary-light: #818cf8;
+  --primary-dark: #3730a3;
   --surface: #ffffff;
-  --background: #f1f5f9;
-  --text: #1e293b;
-  --text-muted: #64748b;
+  --background: #f8fafc;
+  --text: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
   --border: #e2e8f0;
-  --accent-blue: #3b82f6;
-  --accent-green: #22c55e;
-  --accent-red: #ef4444;
-  --accent-gray: #94a3b8;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.03), 0 1px 1px rgba(0,0,0,0.01);
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
   --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
-  --radius: 8px;
-  --radius-sm: 6px;
-  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -5px rgba(0,0,0,0.04);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+  --font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --transition: 180ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 *,
@@ -29,18 +37,22 @@
 }
 
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font);
   background: var(--background);
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ---- Componentes Básicos ---- */
+/* ---- Tipografia ---- */
+h1, h2, h3 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
 
-input,
-button {
+/* ---- Inputs / Botões ---- */
+input, button, textarea {
   font-family: inherit;
   font-size: 0.9rem;
   outline: none;
@@ -49,27 +61,31 @@ button {
 
 input {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 0.6rem 0.75rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-xs);
+  padding: 0.7rem 0.9rem;
   color: var(--text);
+  width: 100%;
 }
 
 input:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
 }
 
 button {
   cursor: pointer;
   border: none;
   background: transparent;
+  font-weight: 500;
+  border-radius: var(--radius-xs);
+  padding: 0.5rem 1.2rem;
 }
 
-/* ---- Container Principal ---- */
+/* ---- Card / Container ---- */
 .app-container {
-  max-width: 960px;
-  margin: 2rem auto;
+  max-width: 1080px;
+  margin: 2.5rem auto;
   background: var(--surface);
   border-radius: var(--radius);
   box-shadow: var(--shadow-lg);
@@ -80,176 +96,185 @@ button {
 .navbar {
   display: flex;
   align-items: center;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: #fff;
-  padding: 0.8rem 1.5rem;
-  gap: 0.5rem;
+  background: var(--surface);
+  padding: 1rem 2rem;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-xs);
 }
 
 .navbar .nav-btn {
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--text-secondary);
   font-size: 0.9rem;
   font-weight: 500;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  border-radius: var(--radius-sm);
+  padding: 0.55rem 1.15rem;
+  border-radius: var(--radius-xs);
   transition: var(--transition);
 }
 
 .navbar .nav-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
-  color: #fff;
+  background: #f1f5f9;
+  color: var(--primary);
 }
 
 .navbar .nav-btn.active {
-  background: rgba(255, 255, 255, 0.25);
-  color: #fff;
+  background: #eef2ff;
+  color: var(--primary);
   font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--primary);
 }
 
 .navbar .logout-btn {
   margin-left: auto;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  color: #fff;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  color: var(--text-secondary);
+  padding: 0.5rem 1.2rem;
+  border-radius: var(--radius-xs);
   font-size: 0.85rem;
-  cursor: pointer;
   transition: var(--transition);
 }
 
 .navbar .logout-btn:hover {
-  background: #fff;
-  color: var(--primary);
-  border-color: #fff;
+  border-color: var(--danger);
+  color: var(--danger);
+  background: #fef2f2;
 }
 
 /* ---- Login ---- */
 .login-wrapper {
-  max-width: 360px;
-  margin: 4rem auto;
-  padding: 2rem;
+  max-width: 380px;
+  margin: 6rem auto;
+  padding: 2.5rem 2rem;
   text-align: center;
   background: var(--surface);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-xl);
 }
 
 .login-wrapper h2 {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  font-weight: 700;
   color: var(--text);
-  font-weight: 600;
+  font-size: 1.5rem;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-}
-
-.login-form input {
-  width: 100%;
+  gap: 1.25rem;
 }
 
 .login-form button {
-  padding: 0.75rem;
-  background: var(--primary);
+  padding: 0.8rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
   color: #fff;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-xs);
   font-weight: 600;
   letter-spacing: 0.02em;
+  font-size: 1rem;
   transition: var(--transition);
-}
-
-.login-form button:hover {
-  background: var(--primary-hover);
-  transform: translateY(-1px);
   box-shadow: var(--shadow-sm);
 }
 
+.login-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+}
+
 .error-msg {
-  color: var(--accent-red);
+  color: var(--danger);
   margin-top: 0.75rem;
   font-size: 0.85rem;
 }
 
 /* ---- Content ---- */
 .content {
-  padding: 1.5rem;
+  padding: 2rem;
 }
 
 .content h2 {
-  margin-bottom: 1.25rem;
-  font-weight: 600;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
   color: var(--text);
+  font-size: 1.35rem;
 }
 
 /* ---- Form Row ---- */
 .form-row {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.25rem;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
   flex-wrap: wrap;
 }
 
 .form-row input {
   flex: 1;
-  min-width: 140px;
+  min-width: 160px;
 }
 
 .form-row button {
-  padding: 0.5rem 1.25rem;
-  background: var(--primary);
+  padding: 0.6rem 1.5rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
   color: #fff;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-xs);
   font-weight: 600;
   transition: var(--transition);
+  box-shadow: var(--shadow-sm);
 }
 
 .form-row button:hover {
-  background: var(--primary-hover);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
 }
 
 /* ---- Table ---- */
 .table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   background: var(--surface);
-  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   overflow: hidden;
 }
 
+.table thead tr {
+  background: #f1f5f9;
+}
+
 .table th,
 .table td {
-  padding: 0.7rem 0.9rem;
+  padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border);
   text-align: left;
   font-size: 0.9rem;
 }
 
 .table th {
-  background: #f8fafc;
   font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-size: 0.8rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.03em;
+  font-size: 0.85rem;
 }
 
-.table tr:last-child td {
+.table tbody tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+.table tbody tr:last-child td {
   border-bottom: none;
 }
 
-.table tr:hover {
-  background: #f1f5f9;
+.table tbody tr:hover {
+  background: #eff6ff;
+  transition: var(--transition);
 }
 
 /* --- Action Buttons inside table cells --- */
@@ -257,14 +282,17 @@ button {
 .table td .btn-save,
 .table td .btn-cancel,
 .table td .btn-delete {
-  padding: 0.3rem 0.65rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.7rem;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-xs);
   cursor: pointer;
   font-size: 0.8rem;
-  background: var(--surface);
-  font-weight: 500;
+  background: transparent;
+  font-weight: 600;
   transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .table td .btn-edit {
@@ -273,49 +301,60 @@ button {
 }
 
 .table td .btn-edit:hover {
-  background: rgba(99, 102, 241, 0.08);
+  background: #eef2ff;
+  transform: translateY(-1px);
 }
 
 .table td .btn-save {
-  color: var(--accent-green);
-  border-color: var(--accent-green);
+  color: var(--success);
+  border-color: var(--success);
 }
 
 .table td .btn-save:hover {
-  background: rgba(34, 197, 94, 0.08);
+  background: #f0fdf4;
+  transform: translateY(-1px);
 }
 
 .table td .btn-cancel {
-  color: var(--accent-gray);
-  border-color: var(--accent-gray);
+  color: var(--text-muted);
+  border-color: var(--text-muted);
 }
 
 .table td .btn-cancel:hover {
-  background: rgba(148, 163, 184, 0.08);
+  background: #f8fafc;
+  transform: translateY(-1px);
 }
 
 .table td .btn-delete {
-  color: var(--accent-red);
-  border-color: var(--accent-red);
+  color: var(--danger);
+  border-color: var(--danger);
 }
 
 .table td .btn-delete:hover {
-  background: rgba(239, 68, 68, 0.08);
+  background: #fef2f2;
+  transform: translateY(-1px);
 }
 
-/* ---- Responsive ---- */
-@media (max-width: 640px) {
+/* ---- Ícones inline com pseudo-elementos ---- */
+.btn-edit::before  { content: '✎\00a0'; }
+.btn-save::before  { content: '💾\00a0'; }
+.btn-cancel::before { content: '✕\00a0'; }
+.btn-delete::before { content: '🗑\00a0'; }
+
+/* ---- Responsivo ---- */
+@media (max-width: 768px) {
   .app-container {
-    margin: 1rem 0.5rem;
+    margin: 1rem 0.75rem;
+    border-radius: var(--radius-sm);
   }
   .navbar {
-    padding: 0.6rem 1rem;
+    padding: 0.75rem 1rem;
     flex-wrap: wrap;
-    gap: 0.25rem;
+    gap: 0.35rem;
   }
   .navbar .nav-btn {
     font-size: 0.8rem;
-    padding: 0.35rem 0.6rem;
+    padding: 0.4rem 0.8rem;
   }
   .navbar .logout-btn {
     margin-left: 0;
@@ -324,7 +363,7 @@ button {
   }
   .form-row {
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.5rem;
   }
   .form-row input {
     min-width: unset;
@@ -336,5 +375,11 @@ button {
   .login-wrapper {
     margin: 2rem 1rem;
     padding: 1.5rem;
+  }
+  .btn-edit::before,
+  .btn-save::before,
+  .btn-cancel::before,
+  .btn-delete::before {
+    content: '' !important;
   }
 }
