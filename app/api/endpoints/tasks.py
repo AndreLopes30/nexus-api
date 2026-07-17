@@ -32,7 +32,7 @@ def list_tasks(current_user: str = Depends(get_current_user), db: Session = Depe
 def create_task(tarefa: criarTarefa, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
     logger.info("create_task chamado para current_user=%s", current_user)
     owner = get_owner(db, current_user)
-    tarefa_db = Task(title=tarefa.titulo, description=tarefa.descricao, owner_id=owner.id, done=False)
+    tarefa_db = Task(title=tarefa.title, description=tarefa.description, owner_id=owner.id, done=False)
     db.add(tarefa_db)
     db.commit()
     db.refresh(tarefa_db)
@@ -49,10 +49,10 @@ def update_task(task_id: int, tarefa: atualizarTarefa, current_user: str = Depen
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Não autorizado")
     
     update_data = tarefa.model_dump(exclude_unset=True)
-    if "titulo" in update_data:
-        tarefa_db.title = update_data["titulo"]
-    if "descricao" in update_data:
-        tarefa_db.description = update_data["descricao"]
+    if "title" in update_data:
+        tarefa_db.title = update_data["title"]
+    if "description" in update_data:
+        tarefa_db.description = update_data["description"]
     
     db.commit()
     db.refresh(tarefa_db)
