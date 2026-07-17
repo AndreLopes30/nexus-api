@@ -8,7 +8,6 @@ export default defineConfig({
     proxy: {
       '/users': 'http://localhost:8000',
       '/tasks': 'http://localhost:8000',
-      '/login': 'http://localhost:8000',
     },
   },
 });

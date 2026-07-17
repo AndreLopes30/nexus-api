@@ -39,9 +39,9 @@ async function request(url, options = {}) {
       throw new Error(msgs);
     }
     if (res.status === 401 || (typeof detail === 'string' && detail.includes('Not authenticated'))) {
-      // Remove token e recarrega a página para voltar ao login
+      // Remove token e dispara evento de sessão expirada
       localStorage.removeItem('access_token');
-      window.location.href = '/';
+      window.dispatchEvent(new CustomEvent('session-expired'));
       throw new Error('Sessão expirada. Faça login novamente.');
     }
     throw new Error(detail || `HTTP ${res.status}`);
@@ -62,11 +62,11 @@ export function loginAPI(username, password) {
 }
 
 export function listUsers() {
-  return request('/users');
+  return request('/users/');
 }
 
 export function createUser(data) {
-  return request('/users', { method: 'POST', body: JSON.stringify(data) });
+  return request('/users/', { method: 'POST', body: JSON.stringify(data) });
 }
 
 export function updateUser(id, data) {
@@ -78,11 +78,11 @@ export function deleteUser(id) {
 }
 
 export function listTasks() {
-  return request('/tasks');
+  return request('/tasks/');
 }
 
 export function createTask(data) {
-  return request('/tasks', { method: 'POST', body: JSON.stringify(data) });
+  return request('/tasks/', { method: 'POST', body: JSON.stringify(data) });
 }
 
 export function updateTask(id, data) {
