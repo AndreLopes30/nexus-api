@@ -95,7 +95,7 @@ nexus/
 | `POST` | `/users/` | ❌ | Criar usuário (registro) |
 | `POST` | `/users/login` | ❌ | Login — retorna `access_token` |
 | `GET` | `/users/` | ✅ | Listar usuários |
-| `GET` | `/users/{user_id}` | ✅ | Obter usuário (somente o próprio) |
+| `GET` | `/users/{user_id}` | ✅ | Obter usuário por ID |
 | `PATCH` | `/users/{user_id}` | ✅ | Atualizar usuário (somente o próprio) |
 | `DELETE` | `/users/{user_id}` | ✅ | Deletar usuário (somente o próprio) |
 
@@ -105,7 +105,6 @@ nexus/
 |:-------|:-----|:------------:|:----------|
 | `GET` | `/tasks/` | ✅ | Listar tarefas do usuário autenticado |
 | `POST` | `/tasks/` | ✅ | Criar tarefa (associada ao usuário) |
-| `GET` | `/tasks/{task_id}` | ✅ | Obter tarefa (somente dono) |
 | `PATCH` | `/tasks/{task_id}` | ✅ | Atualizar tarefa (somente dono) |
 | `DELETE` | `/tasks/{task_id}` | ✅ | Deletar tarefa (somente dono) |
 
@@ -243,7 +242,7 @@ pytest --cov=app --cov-report=term-missing -q
 | `models/` | 100% |
 | `schemas/task.py` | 100% |
 
-Os testes usam banco SQLite em memória — isolamento completo, sem dependência de banco externo.
+Os testes usam banco SQLite em arquivo temporário — isolamento completo, sem dependência de banco externo.
 
 ---
 
@@ -268,7 +267,7 @@ Configuração em `.github/workflows/ci.yml`.
 
 **JWT com controle de acesso por recurso:** cada rota protegida valida se o usuário autenticado é o dono do recurso antes de qualquer operação.
 
-**Pytest com banco em memória:** testes determinísticos, rápidos e sem efeitos colaterais — o mesmo banco nunca é compartilhado entre execuções.
+**Pytest com banco SQLite em arquivo temporário:** testes determinísticos, rápidos e sem efeitos colaterais — o mesmo banco nunca é compartilhado entre execuções.
 
 **Ruff no CI:** linting integrado ao pipeline garante consistência de código sem depender de configuração local.
 
@@ -336,7 +335,7 @@ REST API built with **Python** and **FastAPI** for user and task management, fea
 | `POST` | `/users/` | ❌ | Register a new user |
 | `POST` | `/users/login` | ❌ | Login — returns `access_token` |
 | `GET` | `/users/` | ✅ | List users |
-| `GET` | `/users/{user_id}` | ✅ | Get user by ID (own only) |
+| `GET` | `/users/{user_id}` | ✅ | Get user by ID |
 | `PATCH` | `/users/{user_id}` | ✅ | Update user (own only) |
 | `DELETE` | `/users/{user_id}` | ✅ | Delete user (own only) |
 
@@ -346,7 +345,6 @@ REST API built with **Python** and **FastAPI** for user and task management, fea
 |:-------|:------|:----:|:------------|
 | `GET` | `/tasks/` | ✅ | List tasks for authenticated user |
 | `POST` | `/tasks/` | ✅ | Create task (linked to user) |
-| `GET` | `/tasks/{task_id}` | ✅ | Get task (owner only) |
 | `PATCH` | `/tasks/{task_id}` | ✅ | Update task (owner only) |
 | `DELETE` | `/tasks/{task_id}` | ✅ | Delete task (owner only) |
 
