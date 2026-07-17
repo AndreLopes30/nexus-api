@@ -61,9 +61,8 @@ export default function TaskList() {
   }
 
   async function handleToggleDone(id, currentDone) {
-    const newDone = !currentDone;
     try {
-      await updateTask(id, { done: newDone });
+      await updateTask(id, { done: !currentDone });
       await load();
     } catch (e) {
       alert('Erro ao alterar conclusão: ' + (e.message || e));
