@@ -24,13 +24,19 @@ export default function UserList() {
 
   async function handleCreate(e) {
     e.preventDefault();
+    const nomeTrim = nome.trim();
+    const senhaTrim = senha.trim();
+    if (!nomeTrim || !senhaTrim) {
+      alert('Preencha nome e senha');
+      return;
+    }
     try {
-      await createUser({ nome, senha });
+      await createUser({ nome: nomeTrim, senha: senhaTrim });
       setNome('');
       setSenha('');
       load();
     } catch (e) {
-      alert(e.message);
+      alert('Erro ao criar usuário: ' + (e.message || e));
     }
   }
 

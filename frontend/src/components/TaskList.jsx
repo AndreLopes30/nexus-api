@@ -24,15 +24,21 @@ export default function TaskList() {
 
   async function handleCreate(e) {
     e.preventDefault();
+    const tituloTrim = titulo.trim();
+    if (!tituloTrim) {
+      alert('O título é obrigatório');
+      return;
+    }
+    const descricaoTrim = descricao.trim() || null;
     try {
-      const payload = { titulo };
-      if (descricao) payload.descricao = descricao;
+      const payload = { titulo: tituloTrim };
+      if (descricaoTrim) payload.descricao = descricaoTrim;
       await createTask(payload);
       setTitulo('');
       setDescricao('');
       load();
     } catch (e) {
-      alert(e.message);
+      alert('Erro ao criar tarefa: ' + (e.message || e));
     }
   }
 
