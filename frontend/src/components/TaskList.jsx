@@ -95,14 +95,14 @@ export default function TaskList() {
                 {editingId === t.id ? (
                   <input value={edTitulo} onChange={(e) => setEdTitulo(e.target.value)} />
                 ) : (
-                  t.titulo
+                  t.title
                 )}
               </td>
               <td>
                 {editingId === t.id ? (
                   <input value={edDescricao} onChange={(e) => setEdDescricao(e.target.value)} />
                 ) : (
-                  t.descricao || ''
+                  t.description || ''
                 )}
               </td>
               <td>
@@ -113,7 +113,7 @@ export default function TaskList() {
                   </>
                 ) : (
                   <>
-                    <button className="btn-edit" onClick={() => { setEditingId(t.id); setEdTitulo(t.titulo); setEdDescricao(t.descricao || ''); }}>Editar</button>
+                    <button className="btn-edit" onClick={() => { setEditingId(t.id); setEdTitulo(t.title); setEdDescricao(t.description || ''); }}>Editar</button>
                     <button className="btn-delete" onClick={() => handleDelete(t.id)}>Excluir</button>
                   </>
                 )}
