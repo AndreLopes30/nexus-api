@@ -82,30 +82,54 @@ export default function TaskList() {
   return (
     <div>
       <style>{`
-        .checkbox-round {
-          appearance: none;
-          -webkit-appearance: none;
-          width: 20px;
-          height: 20px;
+        .checkbox-round-label {
+          position: relative;
+          display: inline-block;
+          width: 24px;
+          height: 24px;
+          cursor: pointer;
+          user-select: none;
+          line-height: 24px;
+        }
+        .checkbox-round-input {
+          position: absolute;
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+        .checkbox-round-visual {
+          display: inline-block;
+          width: 24px;
+          height: 24px;
           border-radius: 50%;
           border: 2px solid #aaa;
           background: #fff;
-          cursor: pointer;
-          transition: background-color 0.2s, border-color 0.2s;
+          transition: background 0.2s, border-color 0.2s;
+          position: relative;
         }
-        .checkbox-round:checked {
+        .checkbox-round-visual.checked {
           background: #4CAF50;
           border-color: #4CAF50;
         }
-        .checkbox-round:focus {
-          outline: none;
+        .checkbox-round-visual.checked::after {
+          content: '✓';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: #fff;
+          font-size: 16px;
+          font-weight: bold;
         }
-        .checkbox-round:hover {
+        .checkbox-round-label:hover .checkbox-round-visual {
           border-color: #555;
         }
         .task-row.completed td:not(:first-child):not(:last-child) {
           text-decoration: line-through;
           color: #999;
+        }
+        .task-row.completed {
+          opacity: 0.6;
         }
         .table td {
           vertical-align: middle;
@@ -149,12 +173,15 @@ export default function TaskList() {
                 )}
               </td>
               <td>
-                <input
-                  type="checkbox"
-                  className="checkbox-round"
-                  checked={t.done}
-                  onChange={() => handleToggleDone(t.id, t.done)}
-                />
+                <label className="checkbox-round-label">
+                  <input
+                    type="checkbox"
+                    className="checkbox-round-input"
+                    checked={t.done}
+                    onChange={() => handleToggleDone(t.id, t.done)}
+                  />
+                  <span className={`checkbox-round-visual ${t.done ? 'checked' : ''}`}></span>
+                </label>
               </td>
               <td>
                 {editingId === t.id ? (
