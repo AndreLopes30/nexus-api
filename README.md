@@ -10,7 +10,7 @@
 
 > [Português](#) | [English version below](#-nexus-api--english)
 
-API REST desenvolvida em **Python** com **FastAPI** para gerenciamento de usuários e tarefas, com autenticação JWT, arquitetura modular em camadas, migrations com Alembic, CI/CD com GitHub Actions e 90% de cobertura de testes com Pytest.
+API REST desenvolvida em **Python** com **FastAPI** para gerenciamento de usuários e tarefas, com autenticação JWT, arquitetura modular em camadas, migrations com Alembic, CI/CD com GitHub Actions, 90% de cobertura de testes com Pytest e **frontend em React + TypeScript**.
 
 **[🟢 API em produção](https://nexus-api-7q6p.onrender.com/docs)**
 
@@ -42,6 +42,9 @@ API REST desenvolvida em **Python** com **FastAPI** para gerenciamento de usuár
 | **Pytest + pytest-cov** | Testes automatizados com cobertura |
 | **Ruff** | Linting e formatação de código |
 | **GitHub Actions** | Pipeline CI/CD (lint → test) |
+| **React + TypeScript** | Frontend (interface de usuário) |
+| **Vite** | Build tool do frontend |
+| **Axios** | Chamadas HTTP a partir do frontend |
 
 ---
 
@@ -77,6 +80,7 @@ nexus/
 │   └── main.py                 # Entry point FastAPI
 ├── Tests/
 │   └── test_api.py             # 14 testes — 90% de cobertura total
+├── frontend/                   # Interface React com Vite
 ├── docker-compose.yml
 ├── Dockerfile
 ├── alembic.ini
@@ -303,7 +307,7 @@ MIT — veja o arquivo `LICENSE`.
 ![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
 ![Tests](https://img.shields.io/badge/tests-14%20passed-brightgreen)
 
-REST API built with **Python** and **FastAPI** for user and task management, featuring JWT authentication, layered architecture, Alembic migrations, GitHub Actions CI/CD, and 90% test coverage with Pytest.
+REST API built with **Python** and **FastAPI** for user and task management, featuring JWT authentication, layered architecture, Alembic migrations, GitHub Actions CI/CD, 90% test coverage with Pytest, and a **React frontend**.
 
 **[🟢 Live API](https://nexus-api-7q6p.onrender.com/docs)**
 
@@ -324,6 +328,9 @@ REST API built with **Python** and **FastAPI** for user and task management, fea
 | **Pytest + pytest-cov** | Automated tests with coverage reporting |
 | **Ruff** | Linting and code formatting |
 | **GitHub Actions** | CI/CD pipeline (lint → test) |
+| **React + TypeScript** | Frontend (UI layer) |
+| **Vite** | Frontend build tool |
+| **Axios** | HTTP calls from the frontend |
 
 ---
 
