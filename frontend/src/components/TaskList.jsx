@@ -83,8 +83,9 @@ export default function TaskList() {
     <div>
       <style>{`
         .checkbox-round {
-          -webkit-appearance: none;
-          appearance: none;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
           width: 24px;
           height: 24px;
           border-radius: 50%;
@@ -92,17 +93,19 @@ export default function TaskList() {
           background-color: #fff;
           cursor: pointer;
           transition: background-color 0.2s, border-color 0.2s;
+          user-select: none;
         }
-        .checkbox-round:checked {
+        .checkbox-round.checked {
           background-color: #4CAF50;
           border-color: #4CAF50;
         }
-        .checkbox-round:focus {
-          outline: none;
-          box-shadow: 0 0 4px rgba(76,175,80,0.5);
-        }
         .checkbox-round:hover {
           border-color: #555;
+        }
+        .checkmark {
+          color: #fff;
+          font-size: 14px;
+          line-height: 1;
         }
         .table td {
           vertical-align: middle;
@@ -146,12 +149,21 @@ export default function TaskList() {
                 )}
               </td>
               <td>
-                <input
-                  type="checkbox"
-                  className="checkbox-round"
-                  checked={t.done}
-                  onChange={() => handleToggleDone(t.id, t.done)}
-                />
+                <div
+                  className={`checkbox-round ${t.done ? 'checked' : ''}`}
+                  onClick={() => handleToggleDone(t.id, t.done)}
+                  role="checkbox"
+                  aria-checked={t.done}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === ' ' || e.key === 'Enter') {
+                      e.preventDefault();
+                      handleToggleDone(t.id, t.done);
+                    }
+                  }}
+                >
+                  {t.done && <span className="checkmark">&#10003;</span>}
+                </div>
               </td>
               <td>
                 {editingId === t.id ? (
