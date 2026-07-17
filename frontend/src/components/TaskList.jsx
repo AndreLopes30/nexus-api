@@ -109,18 +109,22 @@ export default function TaskList() {
           background: #4CAF50;
           border-color: #4CAF50;
         }
+        .checkbox-round.checked::after {
+          content: "✓";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: #fff;
+          font-size: 16px;
+          font-weight: bold;
+        }
         .checkbox-round:focus {
           outline: none;
           box-shadow: 0 0 0 2px rgba(76,175,80,0.4);
         }
         .checkbox-round:hover {
           border-color: #555;
-        }
-        .checkmark {
-          color: #fff;
-          font-size: 16px;
-          font-weight: bold;
-          line-height: 1;
         }
         .task-row.completed td:not(:first-child):not(:last-child) {
           text-decoration: line-through;
@@ -183,9 +187,7 @@ export default function TaskList() {
                       handleToggleDone(t.id, t.done);
                     }
                   }}
-                >
-                  {t.done && <span className="checkmark">&#10003;</span>}
-                </div>
+                ></div>
               </td>
               <td>
                 {editingId === t.id ? (
