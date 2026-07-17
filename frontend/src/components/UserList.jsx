@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { listUsers, createUser, updateUser, deleteUser } from '../api';
 
 export default function UserList() {
@@ -9,7 +9,10 @@ export default function UserList() {
   const [edNome, setEdNome] = useState('');
   const [edSenha, setEdSenha] = useState('');
 
+  const loaded = useRef(false);
   useEffect(() => {
+    if (loaded.current) return;
+    loaded.current = true;
     load();
   }, []);
 
@@ -18,6 +21,9 @@ export default function UserList() {
       const data = await listUsers();
       setUsers(data);
     } catch (e) {
+      if (e.message && e.message.includes('Sessão expirada')) {
+        return;
+      }
       alert(e.message);
     }
   }

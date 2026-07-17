@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { listTasks, createTask, updateTask, deleteTask } from '../api';
 
 export default function TaskList() {
@@ -9,7 +9,10 @@ export default function TaskList() {
   const [edTitulo, setEdTitulo] = useState('');
   const [edDescricao, setEdDescricao] = useState('');
 
+  const loaded = useRef(false);
   useEffect(() => {
+    if (loaded.current) return;
+    loaded.current = true;
     load();
   }, []);
 
@@ -18,6 +21,9 @@ export default function TaskList() {
       const data = await listTasks();
       setTasks(data);
     } catch (e) {
+      if (e.message && e.message.includes('Sessão expirada')) {
+        return;
+      }
       alert(e.message);
     }
   }
