@@ -25,8 +25,13 @@ def list_users(current_user: str = Depends(get_current_user), db: Session = Depe
 @router.post("/", response_model=lerUsuario, status_code=201)
 def create_user(usuario: criarUsuario, db: Session = Depends(get_db)):
     hashed_password = get_password_hash(usuario.senha)
-    # Se e‑mail não foi enviado, gera um a partir do nome
-    user_email = usuario.email or (f"{usuario.nome}@placeholder.com" if usuario.nome else "unknown@placeholder.com")
+    # Usa o nome como email se nenhum email foi fornecido
+    if not usuario.email:
+        user_email = usuario.nome
+    else:
+        user_email = usuario.email
+    if not user_email:
+        raise HTTPException(status_code=400, detail="Nome é obrigatório para criar usuário")
     usuario_db = User(nome=usuario.nome, email=user_email, hashed_password=hashed_password)
     db.add(usuario_db)
     try:
@@ -35,7 +40,7 @@ def create_user(usuario: criarUsuario, db: Session = Depends(get_db)):
         return lerUsuario.model_validate(usuario_db)
     except IntegrityError:
         db.rollback()
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email já cadastrado")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email já cadastrado (usuário com este nome já existe)")
 
 @router.get("/{user_id}", response_model=lerUsuario)
 def get_user(user_id: int, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -70,7 +75,9 @@ def delete_user(user_id: int, current_user: str = Depends(get_current_user), db:
 
 @router.post("/login", response_model=Token)
 def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    usuario = db.query(User).filter(User.email == form_data.username).first()
+    usuario = db.query(User).filter(
+        (User.email == form_data.username) | (User.nome == form_data.username)
+    ).first()
     if not usuario or not verify_password(form_data.password, usuario.hashed_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciais inválidas")
     access_token = create_access_token({"sub": usuario.email})
