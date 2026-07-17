@@ -68,7 +68,6 @@ export default function TaskList() {
     );
     try {
       await updateTask(id, { done: newDone });
-      await load();
     } catch (e) {
       // Reverte se a chamada falhar
       setTasks(prevTasks =>
@@ -104,6 +103,7 @@ export default function TaskList() {
           opacity: 0;
           width: 0;
           height: 0;
+          outline: none;
         }
         .checkmark-rc {
           display: inline-block;
