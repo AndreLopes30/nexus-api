@@ -4,11 +4,6 @@ function getToken() {
   return localStorage.getItem('access_token');
 }
 
-function forceLogout() {
-  localStorage.removeItem('access_token');
-  window.location.reload();
-}
-
 async function request(url, options = {}) {
   const headers = { 'Content-Type': 'application/json' };
   const token = getToken();
@@ -44,7 +39,8 @@ async function request(url, options = {}) {
       throw new Error(msgs);
     }
     if (res.status === 401 || (typeof detail === 'string' && detail.includes('Not authenticated'))) {
-      forceLogout();
+      // Dispara evento para que App reaja sem recarregar a página
+      window.dispatchEvent(new CustomEvent('session-expired'));
       throw new Error('Sessão expirada. Faça login novamente.');
     }
     throw new Error(detail || `HTTP ${res.status}`);

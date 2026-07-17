@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Login from './components/Login.jsx';
 import Navbar from './components/Navbar.jsx';
 import UserList from './components/UserList.jsx';
@@ -16,6 +16,15 @@ function App() {
     localStorage.removeItem('access_token');
     setToken(null);
   };
+
+  // Escutar evento de sessão expirada sem recarregar a página
+  useEffect(() => {
+    const handler = () => {
+      handleLogout();
+    };
+    window.addEventListener('session-expired', handler);
+    return () => window.removeEventListener('session-expired', handler);
+  }, []);
 
   if (!token) {
     return <Login onLogin={handleLogin} />;

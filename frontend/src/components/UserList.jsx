@@ -10,10 +10,6 @@ export default function UserList() {
   const [edSenha, setEdSenha] = useState('');
 
   useEffect(() => {
-    if (!localStorage.getItem('access_token')) {
-      window.location.reload();
-      return;
-    }
     load();
   }, []);
 

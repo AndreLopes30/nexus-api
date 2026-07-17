@@ -10,10 +10,6 @@ export default function TaskList() {
   const [edDescricao, setEdDescricao] = useState('');
 
   useEffect(() => {
-    if (!localStorage.getItem('access_token')) {
-      window.location.reload();
-      return;
-    }
     load();
   }, []);
 
