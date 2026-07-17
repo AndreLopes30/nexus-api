@@ -4,9 +4,11 @@ import { listUsers, createUser, updateUser, deleteUser } from '../api';
 export default function UserList() {
   const [users, setUsers] = useState([]);
   const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [edNome, setEdNome] = useState('');
+  const [edEmail, setEdEmail] = useState('');
   const [edSenha, setEdSenha] = useState('');
 
   useEffect(() => {
@@ -28,14 +30,16 @@ export default function UserList() {
   async function handleCreate(e) {
     e.preventDefault();
     const nomeTrim = nome.trim();
+    const emailTrim = email.trim();
     const senhaTrim = senha.trim();
-    if (!nomeTrim || !senhaTrim) {
-      alert('Preencha nome e senha');
+    if (!nomeTrim || !emailTrim || !senhaTrim) {
+      alert('Preencha nome, email e senha');
       return;
     }
     try {
-      await createUser({ nome: nomeTrim, senha: senhaTrim });
+      await createUser({ nome: nomeTrim, email: emailTrim, senha: senhaTrim });
       setNome('');
+      setEmail('');
       setSenha('');
       load();
     } catch (e) {
@@ -47,10 +51,12 @@ export default function UserList() {
     try {
       const payload = {};
       if (edNome) payload.nome = edNome;
+      if (edEmail) payload.email = edEmail;
       if (edSenha) payload.senha = edSenha;
       await updateUser(id, payload);
       setEditingId(null);
       setEdNome('');
+      setEdEmail('');
       setEdSenha('');
       load();
     } catch (e) {
@@ -73,6 +79,7 @@ export default function UserList() {
       <h2>Usuários</h2>
       <form className="form-row" onSubmit={handleCreate}>
         <input placeholder="Nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
+        <input placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         <input placeholder="Senha" type="password" value={senha} onChange={(e) => setSenha(e.target.value)} required />
         <button type="submit">Criar</button>
       </form>
@@ -81,6 +88,7 @@ export default function UserList() {
           <tr>
             <th>ID</th>
             <th>Nome</th>
+            <th>Email</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -97,13 +105,20 @@ export default function UserList() {
               </td>
               <td>
                 {editingId === u.id ? (
+                  <input value={edEmail} onChange={(e) => setEdEmail(e.target.value)} />
+                ) : (
+                  u.email
+                )}
+              </td>
+              <td>
+                {editingId === u.id ? (
                   <>
                     <button className="btn-save" onClick={() => handleUpdate(u.id)}>Salvar</button>
-                    <button className="btn-cancel" onClick={() => { setEditingId(null); setEdNome(''); setEdSenha(''); }}>Cancelar</button>
+                    <button className="btn-cancel" onClick={() => { setEditingId(null); setEdNome(''); setEdEmail(''); setEdSenha(''); }}>Cancelar</button>
                   </>
                 ) : (
                   <>
-                    <button className="btn-edit" onClick={() => { setEditingId(u.id); setEdNome(u.nome); }}>Editar</button>
+                    <button className="btn-edit" onClick={() => { setEditingId(u.id); setEdNome(u.nome); setEdEmail(u.email); }}>Editar</button>
                     <button className="btn-delete" onClick={() => handleDelete(u.id)}>Excluir</button>
                   </>
                 )}
