@@ -83,45 +83,31 @@ export default function TaskList() {
   return (
     <div>
       <style>{`
-        .checkbox-label {
-          position: relative;
-          display: inline-block;
-          width: 28px;
-          height: 28px;
-          cursor: pointer;
-          user-select: none;
-        }
-        .checkbox-input {
-          position: absolute;
-          opacity: 0;
-          width: 0;
-          height: 0;
-        }
-        .checkbox-checkmark {
-          display: inline-block;
+        .task-checkbox {
+          appearance: none;
+          -webkit-appearance: none;
           width: 28px;
           height: 28px;
           border-radius: 50%;
           border: 2px solid #aaa;
           background: #fff;
+          cursor: pointer;
+          outline: none;
           transition: background 0.2s, border-color 0.2s;
-          position: relative;
+          display: inline-block;
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
         }
-        .checkbox-checkmark.checked {
+        .task-checkbox:checked {
           background: #4CAF50;
           border-color: #4CAF50;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+          background-size: 16px 16px;
+          background-position: center;
+          background-repeat: no-repeat;
         }
-        .checkbox-checkmark.checked::after {
-          content: "✓";
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          color: #fff;
-          font-size: 18px;
-          font-weight: bold;
-        }
-        .checkbox-label:hover .checkbox-checkmark {
+        .task-checkbox:hover {
           border-color: #555;
         }
         .task-row.completed td:not(:first-child):not(:last-child) {
@@ -173,15 +159,12 @@ export default function TaskList() {
                 )}
               </td>
               <td>
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    className="checkbox-input"
-                    checked={t.done}
-                    onChange={() => handleToggleDone(t.id, t.done)}
-                  />
-                  <span className={`checkbox-checkmark ${t.done ? 'checked' : ''}`}></span>
-                </label>
+                <input
+                  type="checkbox"
+                  className="task-checkbox"
+                  checked={t.done}
+                  onChange={() => handleToggleDone(t.id, t.done)}
+                />
               </td>
               <td>
                 {editingId === t.id ? (
