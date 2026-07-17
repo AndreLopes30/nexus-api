@@ -4,6 +4,8 @@ function getToken() {
   return localStorage.getItem('access_token');
 }
 
+let sessionExpiredDispatched = false;
+
 async function request(url, options = {}) {
   const headers = { 'Content-Type': 'application/json' };
   const token = getToken();
@@ -39,12 +41,17 @@ async function request(url, options = {}) {
       throw new Error(msgs);
     }
     if (res.status === 401 || (typeof detail === 'string' && detail.includes('Not authenticated'))) {
-      // Dispara evento para que App reaja sem recarregar a página
-      window.dispatchEvent(new CustomEvent('session-expired'));
+      // Dispara evento apenas uma vez para evitar loop
+      if (!sessionExpiredDispatched) {
+        sessionExpiredDispatched = true;
+        window.dispatchEvent(new CustomEvent('session-expired'));
+      }
       throw new Error('Sessão expirada. Faça login novamente.');
     }
     throw new Error(detail || `HTTP ${res.status}`);
   }
+  // Após uma requisição bem‑sucedida, reseta o flag para futuras detecções
+  sessionExpiredDispatched = false;
   if (res.status === 204) return null;
   return res.json();
 }
