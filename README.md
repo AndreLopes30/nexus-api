@@ -4,7 +4,7 @@
 ![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Modern%20API-green)
 ![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
-![Tests](https://img.shields.io/badge/tests-16%20passed-brightgreen)
+![Tests](https://img.shields.io/badge/tests-14%20passed-brightgreen)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
@@ -76,7 +76,7 @@ nexus/
 │   │   └── token.py            # Schema de token JWT
 │   └── main.py                 # Entry point FastAPI
 ├── Tests/
-│   └── test_api.py             # 16 testes — 90% de cobertura total
+│   └── test_api.py             # 14 testes — 90% de cobertura total
 ├── docker-compose.yml
 ├── Dockerfile
 ├── alembic.ini
@@ -105,6 +105,7 @@ nexus/
 |:-------|:-----|:------------:|:----------|
 | `GET` | `/tasks/` | ✅ | Listar tarefas do usuário autenticado |
 | `POST` | `/tasks/` | ✅ | Criar tarefa (associada ao usuário) |
+| `GET` | `/tasks/{task_id}` | ✅ | Obter tarefa (somente dono) |
 | `PATCH` | `/tasks/{task_id}` | ✅ | Atualizar tarefa (somente dono) |
 | `DELETE` | `/tasks/{task_id}` | ✅ | Deletar tarefa (somente dono) |
 
@@ -230,7 +231,7 @@ pytest --cov=app --cov-report=term-missing -q
 **Resultado atual:**
 
 ```
-16 passed in 11.02s — Coverage: 90%
+14 passed in 11.02s — Coverage: 90%
 ```
 
 | Módulo | Cobertura |
@@ -300,7 +301,7 @@ MIT — veja o arquivo `LICENSE`.
 
 ![CI](https://github.com/AndreLopes30/nexus-api/actions/workflows/ci.yml/badge.svg)
 ![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
-![Tests](https://img.shields.io/badge/tests-16%20passed-brightgreen)
+![Tests](https://img.shields.io/badge/tests-14%20passed-brightgreen)
 
 REST API built with **Python** and **FastAPI** for user and task management, featuring JWT authentication, layered architecture, Alembic migrations, GitHub Actions CI/CD, and 90% test coverage with Pytest.
 
@@ -345,6 +346,7 @@ REST API built with **Python** and **FastAPI** for user and task management, fea
 |:-------|:------|:----:|:------------|
 | `GET` | `/tasks/` | ✅ | List tasks for authenticated user |
 | `POST` | `/tasks/` | ✅ | Create task (linked to user) |
+| `GET` | `/tasks/{task_id}` | ✅ | Get task (owner only) |
 | `PATCH` | `/tasks/{task_id}` | ✅ | Update task (owner only) |
 | `DELETE` | `/tasks/{task_id}` | ✅ | Delete task (owner only) |
 
@@ -393,7 +395,7 @@ pytest -q
 pytest --cov=app --cov-report=term-missing -q
 ```
 
-**Current result: 16 passed — 90% coverage**
+**Current result: 14 passed — 90% coverage**
 
 ---
 
