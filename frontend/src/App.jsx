@@ -17,11 +17,8 @@ function App() {
     setToken(null);
   };
 
-  // Escutar evento de sessão expirada sem recarregar a página
   useEffect(() => {
-    const handler = () => {
-      handleLogout();
-    };
+    const handler = () => handleLogout();
     window.addEventListener('session-expired', handler);
     return () => window.removeEventListener('session-expired', handler);
   }, []);
