@@ -22,9 +22,9 @@ function App() {
   }
 
   return (
-    <div>
+    <div className="app-container">
       <Navbar onLogout={handleLogout} page={page} setPage={setPage} />
-      <div style={{ padding: 20 }}>
+      <div className="content">
         {page === 'users' ? <UserList /> : <TaskList />}
       </div>
     </div>

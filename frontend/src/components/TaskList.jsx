@@ -64,23 +64,12 @@ export default function TaskList() {
   return (
     <div>
       <h2>Tarefas</h2>
-      <form onSubmit={handleCreate} style={{ marginBottom: 16 }}>
-        <input
-          placeholder="Título (obrigatório)"
-          value={titulo}
-          onChange={(e) => setTitulo(e.target.value)}
-          required
-          style={{ marginRight: 8, padding: 4 }}
-        />
-        <input
-          placeholder="Descrição (opcional)"
-          value={descricao}
-          onChange={(e) => setDescricao(e.target.value)}
-          style={{ marginRight: 8, padding: 4 }}
-        />
+      <form className="form-row" onSubmit={handleCreate}>
+        <input placeholder="Título (obrigatório)" value={titulo} onChange={(e) => setTitulo(e.target.value)} required />
+        <input placeholder="Descrição (opcional)" value={descricao} onChange={(e) => setDescricao(e.target.value)} />
         <button type="submit">Criar</button>
       </form>
-      <table border="1" cellPadding="6" style={{ borderCollapse: 'collapse' }}>
+      <table className="table">
         <thead>
           <tr>
             <th>ID</th>
@@ -95,22 +84,14 @@ export default function TaskList() {
               <td>{t.id}</td>
               <td>
                 {editingId === t.id ? (
-                  <input
-                    value={edTitulo}
-                    onChange={(e) => setEdTitulo(e.target.value)}
-                    style={{ padding: 2 }}
-                  />
+                  <input value={edTitulo} onChange={(e) => setEdTitulo(e.target.value)} />
                 ) : (
                   t.titulo
                 )}
               </td>
               <td>
                 {editingId === t.id ? (
-                  <input
-                    value={edDescricao}
-                    onChange={(e) => setEdDescricao(e.target.value)}
-                    style={{ padding: 2 }}
-                  />
+                  <input value={edDescricao} onChange={(e) => setEdDescricao(e.target.value)} />
                 ) : (
                   t.descricao || ''
                 )}
@@ -118,32 +99,13 @@ export default function TaskList() {
               <td>
                 {editingId === t.id ? (
                   <>
-                    <button onClick={() => handleUpdate(t.id)} style={{ marginRight: 4 }}>
-                      Salvar
-                    </button>
-                    <button
-                      onClick={() => {
-                        setEditingId(null);
-                        setEdTitulo('');
-                        setEdDescricao('');
-                      }}
-                    >
-                      Cancelar
-                    </button>
+                    <button className="btn-save" onClick={() => handleUpdate(t.id)}>Salvar</button>
+                    <button className="btn-cancel" onClick={() => { setEditingId(null); setEdTitulo(''); setEdDescricao(''); }}>Cancelar</button>
                   </>
                 ) : (
                   <>
-                    <button
-                      onClick={() => {
-                        setEditingId(t.id);
-                        setEdTitulo(t.titulo);
-                        setEdDescricao(t.descricao || '');
-                      }}
-                      style={{ marginRight: 4 }}
-                    >
-                      Editar
-                    </button>
-                    <button onClick={() => handleDelete(t.id)}>Excluir</button>
+                    <button className="btn-edit" onClick={() => { setEditingId(t.id); setEdTitulo(t.titulo); setEdDescricao(t.descricao || ''); }}>Editar</button>
+                    <button className="btn-delete" onClick={() => handleDelete(t.id)}>Excluir</button>
                   </>
                 )}
               </td>

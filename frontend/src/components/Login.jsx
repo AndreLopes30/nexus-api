@@ -21,16 +21,15 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div style={{ maxWidth: 320, margin: '60px auto', textAlign: 'center' }}>
+    <div className="login-wrapper">
       <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+      <form className="login-form" onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Usuário"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
-          style={{ display: 'block', width: '100%', marginBottom: 8, padding: 8 }}
         />
         <input
           type="password"
@@ -38,11 +37,10 @@ export default function Login({ onLogin }) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          style={{ display: 'block', width: '100%', marginBottom: 8, padding: 8 }}
         />
-        <button type="submit" style={{ padding: '8px 16px' }}>Entrar</button>
+        <button type="submit">Entrar</button>
       </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="error-msg">{error}</p>}
     </div>
   );
 }

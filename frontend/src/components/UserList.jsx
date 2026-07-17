@@ -62,25 +62,12 @@ export default function UserList() {
   return (
     <div>
       <h2>Usuários</h2>
-      <form onSubmit={handleCreate} style={{ marginBottom: 16 }}>
-        <input
-          placeholder="Nome"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-          required
-          style={{ marginRight: 8, padding: 4 }}
-        />
-        <input
-          placeholder="Senha"
-          type="password"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-          required
-          style={{ marginRight: 8, padding: 4 }}
-        />
+      <form className="form-row" onSubmit={handleCreate}>
+        <input placeholder="Nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
+        <input placeholder="Senha" type="password" value={senha} onChange={(e) => setSenha(e.target.value)} required />
         <button type="submit">Criar</button>
       </form>
-      <table border="1" cellPadding="6" style={{ borderCollapse: 'collapse' }}>
+      <table className="table">
         <thead>
           <tr>
             <th>ID</th>
@@ -94,11 +81,7 @@ export default function UserList() {
               <td>{u.id}</td>
               <td>
                 {editingId === u.id ? (
-                  <input
-                    value={edNome}
-                    onChange={(e) => setEdNome(e.target.value)}
-                    style={{ padding: 2 }}
-                  />
+                  <input value={edNome} onChange={(e) => setEdNome(e.target.value)} />
                 ) : (
                   u.nome
                 )}
@@ -106,25 +89,13 @@ export default function UserList() {
               <td>
                 {editingId === u.id ? (
                   <>
-                    <button onClick={() => handleUpdate(u.id)} style={{ marginRight: 4 }}>
-                      Salvar
-                    </button>
-                    <button onClick={() => { setEditingId(null); setEdNome(''); setEdSenha(''); }}>
-                      Cancelar
-                    </button>
+                    <button className="btn-save" onClick={() => handleUpdate(u.id)}>Salvar</button>
+                    <button className="btn-cancel" onClick={() => { setEditingId(null); setEdNome(''); setEdSenha(''); }}>Cancelar</button>
                   </>
                 ) : (
                   <>
-                    <button
-                      onClick={() => {
-                        setEditingId(u.id);
-                        setEdNome(u.nome);
-                      }}
-                      style={{ marginRight: 4 }}
-                    >
-                      Editar
-                    </button>
-                    <button onClick={() => handleDelete(u.id)}>Excluir</button>
+                    <button className="btn-edit" onClick={() => { setEditingId(u.id); setEdNome(u.nome); }}>Editar</button>
+                    <button className="btn-delete" onClick={() => handleDelete(u.id)}>Excluir</button>
                   </>
                 )}
               </td>
