@@ -19,7 +19,12 @@ async function request(url, options = {}) {
     throw new Error('Sessão expirada. Faça login novamente.');
   }
   console.log('[request] URL:', `${API_BASE}${url}`, 'Token:', token ? token.slice(0,10)+'...' : 'none');
-  const res = await fetch(`${API_BASE}${url}`, { ...options, headers });
+  let res;
+  try {
+    res = await fetch(`${API_BASE}${url}`, { ...options, headers });
+  } catch (e) {
+    throw new Error(`Não foi possível conectar ao servidor (${API_BASE}${url}). Verifique se o backend está rodando em http://localhost:8000`);
+  }
   if (!res.ok) {
     let body;
     try {
