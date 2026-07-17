@@ -61,10 +61,19 @@ export default function TaskList() {
   }
 
   async function handleToggleDone(id, currentDone) {
+    const newDone = !currentDone;
+    // Optimistic update – reage imediatamente
+    setTasks(prevTasks =>
+      prevTasks.map(t => (t.id === id ? { ...t, done: newDone } : t))
+    );
     try {
-      await updateTask(id, { done: !currentDone });
-      load();
+      await updateTask(id, { done: newDone });
+      await load();
     } catch (e) {
+      // Reverte se a chamada falhar
+      setTasks(prevTasks =>
+        prevTasks.map(t => (t.id === id ? { ...t, done: currentDone } : t))
+      );
       alert('Erro ao alterar conclusão: ' + (e.message || e));
     }
   }
