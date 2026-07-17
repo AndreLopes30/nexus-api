@@ -3,7 +3,7 @@ from pydantic import Field
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env")
+    model_config = SettingsConfigDict(env_file=".env",extra="ignore")
     DATABASE_URL: str = "sqlite:///./test.db"
     SECRET_KEY: str = Field(default="dev-insecure-key")
     ALGORITHM: str = "HS256"
