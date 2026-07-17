@@ -69,6 +69,18 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         headers=headers,
     )
 
+# ----------------------------------------------------------------------
+# Catch-all para retornar JSON em qualquer erro não tratado (ex: 500)
+# ----------------------------------------------------------------------
+@app.exception_handler(Exception)
+async def general_exception_handler(request: Request, exc: Exception):
+    headers = _get_cors_headers(request)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Erro interno do servidor"},
+        headers=headers,
+    )
+
 app.include_router(api_router)
 
 @app.get("/")
