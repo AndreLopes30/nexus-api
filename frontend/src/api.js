@@ -40,6 +40,7 @@ async function request(url, options = {}) {
       throw new Error(msgs);
     }
     // If the error is due to authentication, force logout and refresh
+    // (also handles cases where the status code is 422 but the detail indicates authentication failure)
     if (res.status === 401 || (typeof detail === 'string' && detail.includes('Not authenticated'))) {
       forceLogout();
       // Prevent further code after reload
