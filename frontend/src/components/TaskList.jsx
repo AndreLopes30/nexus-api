@@ -83,23 +83,35 @@ export default function TaskList() {
   return (
     <div>
       <style>{`
-        .checkbox-round {
-          appearance: none;
-          -webkit-appearance: none;
+        .checkbox-label {
+          position: relative;
+          display: inline-block;
+          width: 28px;
+          height: 28px;
+          cursor: pointer;
+          user-select: none;
+        }
+        .checkbox-input {
+          position: absolute;
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+        .checkbox-checkmark {
+          display: inline-block;
           width: 28px;
           height: 28px;
           border-radius: 50%;
           border: 2px solid #aaa;
           background: #fff;
-          cursor: pointer;
-          position: relative;
           transition: background 0.2s, border-color 0.2s;
+          position: relative;
         }
-        .checkbox-round:checked {
+        .checkbox-checkmark.checked {
           background: #4CAF50;
           border-color: #4CAF50;
         }
-        .checkbox-round:checked::after {
+        .checkbox-checkmark.checked::after {
           content: "✓";
           position: absolute;
           top: 50%;
@@ -109,7 +121,7 @@ export default function TaskList() {
           font-size: 18px;
           font-weight: bold;
         }
-        .checkbox-round:hover {
+        .checkbox-label:hover .checkbox-checkmark {
           border-color: #555;
         }
         .task-row.completed td:not(:first-child):not(:last-child) {
@@ -161,12 +173,15 @@ export default function TaskList() {
                 )}
               </td>
               <td>
-                <input
-                  type="checkbox"
-                  className="checkbox-round"
-                  checked={t.done}
-                  onChange={() => handleToggleDone(t.id, t.done)}
-                />
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    className="checkbox-input"
+                    checked={t.done}
+                    onChange={() => handleToggleDone(t.id, t.done)}
+                  />
+                  <span className={`checkbox-checkmark ${t.done ? 'checked' : ''}`}></span>
+                </label>
               </td>
               <td>
                 {editingId === t.id ? (
