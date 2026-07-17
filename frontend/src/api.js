@@ -4,12 +4,21 @@ function getToken() {
   return localStorage.getItem('access_token');
 }
 
+function forceLogout() {
+  localStorage.removeItem('access_token');
+  window.location.reload();
+}
+
 async function request(url, options = {}) {
   const headers = { 'Content-Type': 'application/json' };
   const token = getToken();
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
+  } else {
+    // No token stored, cannot make authenticated requests
+    throw new Error('Sessão expirada. Faça login novamente.');
   }
+  console.log('[request] URL:', `${API_BASE}${url}`, 'Token:', token ? token.slice(0,10)+'...' : 'none');
   const res = await fetch(`${API_BASE}${url}`, { ...options, headers });
   if (!res.ok) {
     let body;
@@ -29,6 +38,12 @@ async function request(url, options = {}) {
         })
         .join('\n');
       throw new Error(msgs);
+    }
+    // If the error is due to authentication, force logout and refresh
+    if (res.status === 401 || (typeof detail === 'string' && detail.includes('Not authenticated'))) {
+      forceLogout();
+      // Prevent further code after reload
+      throw new Error('Sessão expirada. Faça login novamente.');
     }
     throw new Error(detail || `HTTP ${res.status}`);
   }
