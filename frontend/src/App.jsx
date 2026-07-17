@@ -1,4 +1,3 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import Login from './components/Login.jsx';
 import Navbar from './components/Navbar.jsx';
@@ -7,6 +6,7 @@ import TaskList from './components/TaskList.jsx';
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('access_token'));
+  const [page, setPage] = useState('tasks');
 
   const handleLogin = (t) => {
     localStorage.setItem('access_token', t);
@@ -22,16 +22,12 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <Navbar onLogout={handleLogout} />
+    <div>
+      <Navbar onLogout={handleLogout} page={page} setPage={setPage} />
       <div style={{ padding: 20 }}>
-        <Routes>
-          <Route path="/users" element={<UserList />} />
-          <Route path="/tasks" element={<TaskList />} />
-          <Route path="*" element={<Navigate to="/tasks" />} />
-        </Routes>
+        {page === 'users' ? <UserList /> : <TaskList />}
       </div>
-    </BrowserRouter>
+    </div>
   );
 }
 
