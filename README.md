@@ -3,16 +3,11 @@
 ![CI](https://github.com/AndreLopes30/nexus-api/actions/workflows/ci.yml/badge.svg)
 ![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Modern%20API-green)
-![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
-![Tests](https://img.shields.io/badge/tests-14%20passed-brightgreen)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
 > [Português](#) | [English version below](#-nexus-api--english)
 
-API REST desenvolvida em **Python** com **FastAPI** para gerenciamento de usuários e tarefas, com autenticação JWT, arquitetura modular em camadas, migrations com Alembic, CI com GitHub Actions, 90% de cobertura de testes com Pytest e **frontend em React + TypeScript**.
-
-**[🟢 API em produção](https://nexus-api-7q6p.onrender.com/docs)**
+API REST desenvolvida em **Python** com **FastAPI** para gerenciamento de usuários e tarefas, com autenticação JWT, arquitetura modular em camadas, migrations com Alembic, testes com Pytest, CI com GitHub Actions e **frontend em React**.
 
 ---
 
@@ -39,10 +34,10 @@ API REST desenvolvida em **Python** com **FastAPI** para gerenciamento de usuár
 | **Docker** | Containerização da aplicação |
 | **Passlib + Bcrypt** | Hash seguro de senhas |
 | **python-jose (JWT)** | Geração e validação de tokens de acesso |
-| **Pytest + pytest-cov** | Testes automatizados com cobertura |
-| **Ruff** | Linting e formatação de código |
+| **Pytest** | Testes automatizados |
+| **Ruff 0.16.3** | Linting reproduzível no CI |
 | **GitHub Actions** | Pipeline CI (lint → test) |
-| **React + TypeScript** | Frontend (interface de usuário) |
+| **React + JavaScript** | Frontend (interface de usuário) |
 | **Vite** | Build tool do frontend |
 | **Axios** | Chamadas HTTP a partir do frontend |
 
@@ -61,12 +56,12 @@ nexus/
 ├── app/
 │   ├── api/
 │   │   ├── endpoints/
-│   │   │   ├── users.py        # Rotas de usuários (90% cobertura)
-│   │   │   └── tasks.py        # Rotas de tarefas (92% cobertura)
+│   │   │   ├── users.py        # Rotas de usuários
+│   │   │   └── tasks.py        # Rotas de tarefas
 │   │   └── api.py              # Registro de routers
 │   ├── core/
 │   │   ├── config.py           # Configurações via variáveis de ambiente
-│   │   ├── security.py         # Lógica de JWT e hashing (91% cobertura)
+│   │   ├── security.py         # Lógica de JWT e hashing
 │   │   └── logging_config.py   # Configuração de logs
 │   ├── db/
 │   │   └── database.py         # Engine e sessão SQLAlchemy
@@ -74,12 +69,13 @@ nexus/
 │   │   ├── user.py             # Modelo ORM de usuário
 │   │   └── task.py             # Modelo ORM de tarefa
 │   ├── schemas/
-│   │   ├── user.py             # Schemas Pydantic de usuário (95% cobertura)
+│   │   ├── user.py             # Schemas Pydantic de usuário
 │   │   ├── task.py             # Schemas Pydantic de tarefa
 │   │   └── token.py            # Schema de token JWT
 │   └── main.py                 # Entry point FastAPI
 ├── Tests/
-│   └── test_api.py             # 14 testes — 90% de cobertura total
+│   ├── test_api.py             # Testes dos fluxos HTTP
+│   └── test_db.py              # Teste de conectividade configurada
 ├── frontend/                   # Interface React com Vite
 ├── docker-compose.yml
 ├── Dockerfile
@@ -109,7 +105,6 @@ nexus/
 |:-------|:-----|:------------:|:----------|
 | `GET` | `/tasks/` | ✅ | Listar tarefas do usuário autenticado |
 | `POST` | `/tasks/` | ✅ | Criar tarefa (associada ao usuário) |
-| `GET` | `/tasks/{task_id}` | ✅ | Obter tarefa (somente dono) |
 | `PATCH` | `/tasks/{task_id}` | ✅ | Atualizar tarefa (somente dono) |
 | `DELETE` | `/tasks/{task_id}` | ✅ | Deletar tarefa (somente dono) |
 
@@ -147,7 +142,7 @@ pip install -r requirements.txt
 Crie o arquivo `.env` na raiz (use `.env.example` como base):
 
 ```env
-SECRET_KEY=sua_chave_secreta_aqui
+SECRET_KEY=substitua-por-um-segredo-aleatorio-de-32-caracteres
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 DATABASE_URL=sqlite:///./nexus.db
@@ -218,36 +213,18 @@ Authorization: Bearer <access_token>
 
 No Swagger UI: clique em **Authorize** e cole o token.
 
-O controle de acesso garante isolamento total — usuários só acessam e modificam seus próprios recursos.
+O controle de acesso restringe as tarefas ao respectivo dono e permite que cada usuário altere ou exclua somente o próprio perfil.
 
 ---
 
 ## 🧪 Testes
 
 ```bash
-# Executar todos os testes
-pytest -q
-
-# Com relatório de cobertura
-pytest --cov=app --cov-report=term-missing -q
+# Executar a mesma suíte usada pelo CI
+pytest Tests/ -q
 ```
 
-**Resultado atual:**
-
-```
-14 passed in 11.02s — Coverage: 90%
-```
-
-| Módulo | Cobertura |
-|--------|-----------|
-| `api/endpoints/tasks.py` | 92% |
-| `api/endpoints/users.py` | 90% |
-| `core/security.py` | 91% |
-| `schemas/user.py` | 95% |
-| `models/` | 100% |
-| `schemas/task.py` | 100% |
-
-Os testes usam banco SQLite em arquivo temporário — isolamento completo, sem dependência de banco externo.
+Os testes da API usam SQLite em memória com um pool estático, sem depender de banco externo. O teste de conectividade executa uma consulta somente leitura no banco definido por `DATABASE_URL`; o CI também aponta essa configuração para SQLite em memória.
 
 ---
 
@@ -272,9 +249,9 @@ Configuração em `.github/workflows/ci.yml`.
 
 **JWT com controle de acesso por recurso:** cada rota protegida valida se o usuário autenticado é o dono do recurso antes de qualquer operação.
 
-**Pytest com banco SQLite em arquivo temporário:** testes determinísticos, rápidos e sem efeitos colaterais — o mesmo banco nunca é compartilhado entre execuções.
+**Pytest com SQLite em memória:** a suíte recria as tabelas entre os testes da API e não persiste um arquivo de banco no repositório.
 
-**Ruff no CI:** linting integrado ao pipeline garante consistência de código sem depender de configuração local.
+**Ruff configurado e fixado no CI:** as regras estão declaradas em `pyproject.toml` e a versão usada pelo workflow é explícita. A exceção B008 é limitada aos arquivos que usam `Depends(...)`, padrão de injeção de dependência do FastAPI.
 
 ---
 
@@ -282,7 +259,7 @@ Configuração em `.github/workflows/ci.yml`.
 
 - Refresh tokens para renovação de sessão sem novo login
 - Paginação e filtros nas rotas de tarefas
-- Deploy automático via GitHub Actions
+- Relatório de cobertura publicado pelo CI, quando houver uma meta de cobertura definida
 
 ---
 
@@ -290,26 +267,12 @@ Configuração em `.github/workflows/ci.yml`.
 
 **André Ferreira**
 [GitHub](https://github.com/AndreLopes30) · [LinkedIn](https://www.linkedin.com/in/andre-ferreira30)
-
+<!-- end of Portuguese version -->
 ---
-
-## 📝 Licença
-
-MIT — veja o arquivo `LICENSE`.
-
----
-
----
-
 # 🚀 Nexus API — English
 
 ![CI](https://github.com/AndreLopes30/nexus-api/actions/workflows/ci.yml/badge.svg)
-![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
-![Tests](https://img.shields.io/badge/tests-14%20passed-brightgreen)
-
-REST API built with **Python** and **FastAPI** for user and task management, featuring JWT authentication, layered architecture, Alembic migrations, GitHub Actions CI/CD, 90% test coverage with Pytest, and a **React frontend**.
-
-**[🟢 Live API](https://nexus-api-7q6p.onrender.com/docs)**
+REST API built with **Python** and **FastAPI** for user and task management, featuring JWT authentication, layered architecture, Alembic migrations, automated tests, GitHub Actions CI, and a **React frontend**.
 
 ---
 
@@ -325,10 +288,10 @@ REST API built with **Python** and **FastAPI** for user and task management, fea
 | **Docker** | Containerization |
 | **Passlib + Bcrypt** | Secure password hashing |
 | **python-jose (JWT)** | Token generation and validation |
-| **Pytest + pytest-cov** | Automated tests with coverage reporting |
-| **Ruff** | Linting and code formatting |
+| **Pytest** | Automated tests |
+| **Ruff 0.16.3** | Reproducible CI linting |
 | **GitHub Actions** | CI/CD pipeline (lint → test) |
-| **React + TypeScript** | Frontend (UI layer) |
+| **React + JavaScript** | Frontend (UI layer) |
 | **Vite** | Frontend build tool |
 | **Axios** | HTTP calls from the frontend |
 
@@ -353,7 +316,6 @@ REST API built with **Python** and **FastAPI** for user and task management, fea
 |:-------|:------|:----:|:------------|
 | `GET` | `/tasks/` | ✅ | List tasks for authenticated user |
 | `POST` | `/tasks/` | ✅ | Create task (linked to user) |
-| `GET` | `/tasks/{task_id}` | ✅ | Get task (owner only) |
 | `PATCH` | `/tasks/{task_id}` | ✅ | Update task (owner only) |
 | `DELETE` | `/tasks/{task_id}` | ✅ | Delete task (owner only) |
 
@@ -378,7 +340,7 @@ pip install -r requirements.txt
 Create a `.env` file at the project root:
 
 ```env
-SECRET_KEY=your_secret_key_here
+SECRET_KEY=replace-with-a-random-secret-of-at-least-32-characters
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 DATABASE_URL=sqlite:///./nexus.db
@@ -398,11 +360,8 @@ Access at: `http://127.0.0.1:8000/docs`
 ## 🧪 Tests
 
 ```bash
-pytest -q
-pytest --cov=app --cov-report=term-missing -q
+pytest Tests/ -q
 ```
-
-**Current result: 14 passed — 90% coverage**
 
 ---
 
@@ -418,9 +377,4 @@ Every push and pull request to `main`/`master` triggers:
 
 **André Ferreira**
 [GitHub](https://github.com/AndreLopes30) · [LinkedIn](https://www.linkedin.com/in/andre-ferreira30)
-
----
-
-## 📝 License
-
-MIT
+<!-- end of README -->

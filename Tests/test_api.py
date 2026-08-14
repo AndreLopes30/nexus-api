@@ -1,12 +1,18 @@
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.main import app
+from sqlalchemy.pool import StaticPool
+
 from app.db.database import Base, get_db
+from app.main import app
 
 # Banco SQLite local temporário para isolar os testes
-TEST_SQLALCHEMY_DATABASE_URL = "sqlite:///./test_nexus.db"
-engine = create_engine(TEST_SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+TEST_SQLALCHEMY_DATABASE_URL = "sqlite://"
+engine = create_engine(
+    TEST_SQLALCHEMY_DATABASE_URL,
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool,
+)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
@@ -22,12 +28,12 @@ app.dependency_overrides[get_db] = override_get_db
 client = TestClient(app)
 
 
-def setup_function(function):
+def setup_function():
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
 
 
-def teardown_function(function):
+def teardown_function():
     Base.metadata.drop_all(bind=engine)
 
 
@@ -71,22 +77,22 @@ def test_login_wrong_password():
 def test_task_forbidden_other_user():
     client.post("/users/", json={"nome": "U1", "email": "u1@test.com", "senha": "pass"})
     client.post("/users/", json={"nome": "U2", "email": "u2@test.com", "senha": "pass"})
-    
+
     t1 = client.post("/users/login", data={"username": "u1@test.com", "password": "pass"})
     t2 = client.post("/users/login", data={"username": "u2@test.com", "password": "pass"})
-    
+
     h1 = {"Authorization": f"Bearer {t1.json()['access_token']}"}
     h2 = {"Authorization": f"Bearer {t2.json()['access_token']}"}
-    
+
     task = client.post("/tasks/", json={"title": "t1"}, headers=h1).json()
-    
+
     r = client.delete(f"/tasks/{task['id']}", headers=h2)
     assert r.status_code == 403
 
 
 def test_list_tasks_unauthenticated():
     r = client.get("/tasks/")
-    assert r.status_code == 401    
+    assert r.status_code == 401
 
 
 # ==================== NOVOS TESTES (CORRIGIDOS) ====================
@@ -104,9 +110,11 @@ def test_update_task_success():
     client.post("/users/", json={"nome": "TaskOwner", "email": "owner@test.com", "senha": "pass"})
     t = client.post("/users/login", data={"username": "owner@test.com", "password": "pass"})
     headers = {"Authorization": f"Bearer {t.json()['access_token']}"}
-    
-    task = client.post("/tasks/", json={"title": "Tarefa Antiga", "description": "Desc"}, headers=headers).json()
-    
+
+    task = client.post(
+        "/tasks/", json={"title": "Tarefa Antiga", "description": "Desc"}, headers=headers
+    ).json()
+
     r = client.patch(f"/tasks/{task['id']}", json={"title": "Tarefa Atualizada"}, headers=headers)
     assert r.status_code == 200
     assert r.json()["title"] == "Tarefa Atualizada"
@@ -117,7 +125,7 @@ def test_update_task_not_found():
     client.post("/users/", json={"nome": "User", "email": "user@test.com", "senha": "pass"})
     t = client.post("/users/login", data={"username": "user@test.com", "password": "pass"})
     headers = {"Authorization": f"Bearer {t.json()['access_token']}"}
-    
+
     r = client.patch("/tasks/9999", json={"title": "Inexistente"}, headers=headers)
     assert r.status_code == 404
 
@@ -126,28 +134,32 @@ def test_update_task_forbidden():
     """Cobre erro 403 ao tentar modificar tarefa de outro user"""
     client.post("/users/", json={"nome": "U1", "email": "u1@test.com", "senha": "pass"})
     client.post("/users/", json={"nome": "U2", "email": "u2@test.com", "senha": "pass"})
-    
+
     t1 = client.post("/users/login", data={"username": "u1@test.com", "password": "pass"})
     t2 = client.post("/users/login", data={"username": "u2@test.com", "password": "pass"})
-    
+
     h1 = {"Authorization": f"Bearer {t1.json()['access_token']}"}
     h2 = {"Authorization": f"Bearer {t2.json()['access_token']}"}
-    
+
     task = client.post("/tasks/", json={"title": "Dono U1"}, headers=h1).json()
-    
+
     r = client.patch(f"/tasks/{task['id']}", json={"title": "Tentativa Hack"}, headers=h2)
     assert r.status_code == 403
 
 
 def test_update_user_own_profile():
     """Cobre o fluxo PATCH de user.py"""
-    res = client.post("/users/", json={"nome": "Original", "email": "profile@test.com", "senha": "pass"})
+    res = client.post(
+        "/users/", json={"nome": "Original", "email": "profile@test.com", "senha": "pass"}
+    )
     user_id = res.json()["id"]
-    
+
     t = client.post("/users/login", data={"username": "profile@test.com", "password": "pass"})
     headers = {"Authorization": f"Bearer {t.json()['access_token']}"}
-    
-    r = client.patch(f"/users/{user_id}", json={"nome": "Novo Nome", "senha": "newpassword"}, headers=headers)
+
+    r = client.patch(
+        f"/users/{user_id}", json={"nome": "Novo Nome", "senha": "newpassword"}, headers=headers
+    )
     assert r.status_code == 200
     assert r.json()["nome"] == "Novo Nome"
 
@@ -156,37 +168,38 @@ def test_update_user_forbidden():
     """Cobre erro 403 ao tentar alterar outro usuário"""
     res_u1 = client.post("/users/", json={"nome": "U1", "email": "u1@test.com", "senha": "pass"})
     client.post("/users/", json={"nome": "U2", "email": "u2@test.com", "senha": "pass"})
-    
+
     t2 = client.post("/users/login", data={"username": "u2@test.com", "password": "pass"})
     headers = {"Authorization": f"Bearer {t2.json()['access_token']}"}
-    
+
     r = client.patch(f"/users/{res_u1.json()['id']}", json={"nome": "Hack"}, headers=headers)
     assert r.status_code == 403
 
 
 def test_delete_user_own_profile():
     """Cobre o fluxo DELETE de user.py"""
-    res = client.post("/users/", json={"nome": "Deletar", "email": "delete@test.com", "senha": "pass"})
+    res = client.post(
+        "/users/", json={"nome": "Deletar", "email": "delete@test.com", "senha": "pass"}
+    )
     user_id = res.json()["id"]
-    
+
     t = client.post("/users/login", data={"username": "delete@test.com", "password": "pass"})
     headers = {"Authorization": f"Bearer {t.json()['access_token']}"}
-    
+
     r = client.delete(f"/users/{user_id}", headers=headers)
     assert r.status_code == 200
     assert r.json()["message"] == "Usuário deletado com sucesso!"
 
 
-def test_get_single_task_success():
-    """Cobre busca de uma tarefa específica por ID"""
+def test_get_single_task_is_not_supported():
+    """Documenta que a API não expõe GET /tasks/{id}."""
     client.post("/users/", json={"nome": "U1", "email": "task_id@test.com", "senha": "pass"})
     t = client.post("/users/login", data={"username": "task_id@test.com", "password": "pass"})
     headers = {"Authorization": f"Bearer {t.json()['access_token']}"}
-    
+
     task = client.post("/tasks/", json={"title": "Buscar por ID"}, headers=headers).json()
     r = client.get(f"/tasks/{task['id']}", headers=headers)
-    if r.status_code != 405:
-        assert r.status_code in [200, 404]
+    assert r.status_code == 405
 
 
 def test_delete_task_success():
@@ -194,7 +207,7 @@ def test_delete_task_success():
     client.post("/users/", json={"nome": "Dono", "email": "dono_del@test.com", "senha": "pass"})
     t = client.post("/users/login", data={"username": "dono_del@test.com", "password": "pass"})
     headers = {"Authorization": f"Bearer {t.json()['access_token']}"}
-    
+
     task = client.post("/tasks/", json={"title": "Deletar me"}, headers=headers).json()
     r = client.delete(f"/tasks/{task['id']}", headers=headers)
     assert r.status_code in [200, 204]
@@ -205,6 +218,6 @@ def test_delete_task_not_found():
     client.post("/users/", json={"nome": "Dono", "email": "dono_del404@test.com", "senha": "pass"})
     t = client.post("/users/login", data={"username": "dono_del404@test.com", "password": "pass"})
     headers = {"Authorization": f"Bearer {t.json()['access_token']}"}
-    
+
     r = client.delete("/tasks/9999", headers=headers)
     assert r.status_code == 404

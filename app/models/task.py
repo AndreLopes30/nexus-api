@@ -1,6 +1,9 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from datetime import datetime
+
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
+
 from app.models.base import Base
+
 
 class Task(Base):
     __tablename__ = "tasks"
@@ -8,6 +11,7 @@ class Task(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True, nullable=False)
     description = Column(String, nullable=True)
+    done = Column(Boolean, default=False, nullable=False)
     priority = Column(Integer, default=0)
     workspace_id = Column(Integer, default=0, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)

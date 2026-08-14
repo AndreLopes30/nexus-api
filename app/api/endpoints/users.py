@@ -1,15 +1,20 @@
-from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
-from app.schemas.user import criarUsuario, lerUsuario, atualizarUsuario
-from app.schemas.token import Token
+from sqlalchemy.orm import Session
+
+from app.core.security import (
+    create_access_token,
+    get_current_user,
+    get_password_hash,
+    verify_password,
+)
 from app.db.database import get_db
 from app.models.user import User
-from app.core.security import get_current_user, verify_password, create_access_token, get_password_hash
-from sqlalchemy.exc import IntegrityError
+from app.schemas.token import Token
+from app.schemas.user import atualizarUsuario, criarUsuario, lerUsuario
 
 router = APIRouter()
+
 
 def get_user_or_404(db: Session, user_id: int) -> User:
     usuario = db.query(User).filter(User.id == user_id).first()
@@ -17,10 +22,12 @@ def get_user_or_404(db: Session, user_id: int) -> User:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuário não encontrado")
     return usuario
 
-@router.get("/", response_model=List[lerUsuario])
+
+@router.get("/", response_model=list[lerUsuario])
 def list_users(current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
     usuarios = [lerUsuario.model_validate(u) for u in db.query(User).all()]
     return usuarios
+
 
 @router.post("/", response_model=lerUsuario, status_code=201)
 def create_user(usuario: criarUsuario, db: Session = Depends(get_db)):
@@ -34,21 +41,32 @@ def create_user(usuario: criarUsuario, db: Session = Depends(get_db)):
     db.refresh(usuario_db)
     return lerUsuario.model_validate(usuario_db)
 
+
 @router.get("/{user_id}", response_model=lerUsuario)
-def get_user(user_id: int, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
+def get_user(
+    user_id: int, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)
+):
     usuario = get_user_or_404(db, user_id)
     return lerUsuario.model_validate(usuario)
 
+
 @router.patch("/{user_id}", response_model=lerUsuario)
-def update_user(user_id: int, usuario: atualizarUsuario, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
+def update_user(
+    user_id: int,
+    usuario: atualizarUsuario,
+    current_user: str = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
     usuario_db = get_user_or_404(db, user_id)
 
     if usuario_db.email != current_user:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Você só pode editar seu próprio perfil")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Você só pode editar seu próprio perfil"
+        )
 
     for field, value in usuario.model_dump(exclude_unset=True).items():
         if field == "senha":
-            setattr(usuario_db, "hashed_password", get_password_hash(value))
+            usuario_db.hashed_password = get_password_hash(value)
         else:
             setattr(usuario_db, field, value)
 
@@ -56,21 +74,31 @@ def update_user(user_id: int, usuario: atualizarUsuario, current_user: str = Dep
     db.refresh(usuario_db)
     return lerUsuario.model_validate(usuario_db)
 
+
 @router.delete("/{user_id}")
-def delete_user(user_id: int, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
+def delete_user(
+    user_id: int, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)
+):
     usuario_db = get_user_or_404(db, user_id)
     if usuario_db.email != current_user:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Você só pode excluir seu próprio perfil")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Você só pode excluir seu próprio perfil"
+        )
     db.delete(usuario_db)
     db.commit()
     return {"message": "Usuário deletado com sucesso!"}
 
+
 @router.post("/login", response_model=Token)
 def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    usuario = db.query(User).filter(
-        (User.email == form_data.username) | (User.nome == form_data.username)
-    ).first()
+    usuario = (
+        db.query(User)
+        .filter((User.email == form_data.username) | (User.nome == form_data.username))
+        .first()
+    )
     if not usuario or not verify_password(form_data.password, usuario.hashed_password):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciais inválidas")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciais inválidas"
+        )
     access_token = create_access_token({"sub": usuario.email})
     return {"access_token": access_token, "token_type": "bearer"}

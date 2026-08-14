@@ -1,25 +1,29 @@
 import logging
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from starlette.exceptions import HTTPException
 from starlette.requests import Request
 from starlette.responses import JSONResponse
+
 from app.api.api import api_router
-from app.db.database import create_tables
-from app.core.logging_config import configure_logging
 from app.core.config import settings
+from app.core.logging_config import configure_logging
+from app.db.database import create_tables
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     if getattr(settings, "CREATE_TABLES_ON_STARTUP", False):
         create_tables()
-    
+
     log_level = getattr(settings, "LOG_LEVEL", "INFO")
     configure_logging(log_level)
-    
+
     yield
+
 
 app = FastAPI(title="Nexus API", version="0.0.1", lifespan=lifespan)
 
@@ -35,6 +39,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # ----------------------------------------------------------------------
 # Garantir que todos os erros (incluindo 401/422) sejam retornados como JSON
@@ -52,6 +57,7 @@ def _get_cors_headers(request: Request) -> dict:
         }
     return {}
 
+
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     headers = _get_cors_headers(request)
@@ -61,6 +67,7 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         headers=headers,
     )
 
+
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     headers = _get_cors_headers(request)
@@ -69,6 +76,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         content={"detail": exc.errors()},
         headers=headers,
     )
+
 
 # ----------------------------------------------------------------------
 # Catch-all para retornar JSON em qualquer erro não tratado (ex: 500)
@@ -83,7 +91,9 @@ async def general_exception_handler(request: Request, exc: Exception):
         headers=headers,
     )
 
+
 app.include_router(api_router)
+
 
 @app.get("/")
 def health_check():

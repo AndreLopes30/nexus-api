@@ -1,4 +1,5 @@
-from pydantic import BaseModel, field_validator, ConfigDict
+from pydantic import BaseModel, ConfigDict, field_validator
+
 
 class criarUsuario(BaseModel):
     nome: str
@@ -12,12 +13,14 @@ class criarUsuario(BaseModel):
             raise ValueError("Senha muito longa, máximo 72 bytes")
         return v
 
+
 class lerUsuario(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     nome: str | None = None
     email: str
-   
+
+
 class atualizarUsuario(BaseModel):
     nome: str | None = None
     email: str | None = None
