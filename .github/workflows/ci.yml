@@ -37,4 +37,4 @@ jobs:
         env:
           DATABASE_URL: "sqlite:///:memory:"
           SECRET_KEY: "ci-only-secret-key-not-for-production-123456"
-        run: pytest Tests/ -q
+        run: python -m pytest Tests/ -q
