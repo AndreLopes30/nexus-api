@@ -38,7 +38,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)) -> str:
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        logger.info("Token decodificado com sucesso: %s", payload)
+        logger.info("Token JWT decodificado com sucesso")
         email: str = payload.get("sub")
         if email is None:
             logger.warning("Token sem campo sub")
