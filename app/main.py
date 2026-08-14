@@ -79,7 +79,7 @@ async def general_exception_handler(request: Request, exc: Exception):
     headers = _get_cors_headers(request)
     return JSONResponse(
         status_code=500,
-        content={"detail": str(exc)},
+        content={"detail": "Erro interno do servidor"},
         headers=headers,
     )
 
