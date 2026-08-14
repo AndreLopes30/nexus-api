@@ -221,14 +221,14 @@ O controle de acesso restringe as tarefas ao respectivo dono e permite que cada 
 
 ```bash
 # Executar a mesma suíte usada pelo CI
-pytest Tests/ -q
+python -m pytest Tests/ -q
 ```
 
 Os testes da API usam SQLite em memória com um pool estático, sem depender de banco externo. O teste de conectividade executa uma consulta somente leitura no banco definido por `DATABASE_URL`; o CI também aponta essa configuração para SQLite em memória.
 
 ---
 
-## 🔄 CI/CD
+## 🔄 CI
 
 O pipeline roda automaticamente em todo push e pull request para `main`/`master`:
 
