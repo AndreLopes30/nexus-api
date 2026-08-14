@@ -10,7 +10,7 @@
 
 > [Português](#) | [English version below](#-nexus-api--english)
 
-API REST desenvolvida em **Python** com **FastAPI** para gerenciamento de usuários e tarefas, com autenticação JWT, arquitetura modular em camadas, migrations com Alembic, CI/CD com GitHub Actions, 90% de cobertura de testes com Pytest e **frontend em React + TypeScript**.
+API REST desenvolvida em **Python** com **FastAPI** para gerenciamento de usuários e tarefas, com autenticação JWT, arquitetura modular em camadas, migrations com Alembic, CI com GitHub Actions, 90% de cobertura de testes com Pytest e **frontend em React + TypeScript**.
 
 **[🟢 API em produção](https://nexus-api-7q6p.onrender.com/docs)**
 
@@ -41,7 +41,7 @@ API REST desenvolvida em **Python** com **FastAPI** para gerenciamento de usuár
 | **python-jose (JWT)** | Geração e validação de tokens de acesso |
 | **Pytest + pytest-cov** | Testes automatizados com cobertura |
 | **Ruff** | Linting e formatação de código |
-| **GitHub Actions** | Pipeline CI/CD (lint → test) |
+| **GitHub Actions** | Pipeline CI (lint → test) |
 | **React + TypeScript** | Frontend (interface de usuário) |
 | **Vite** | Build tool do frontend |
 | **Axios** | Chamadas HTTP a partir do frontend |
