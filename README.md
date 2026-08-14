@@ -290,7 +290,7 @@ REST API built with **Python** and **FastAPI** for user and task management, fea
 | **python-jose (JWT)** | Token generation and validation |
 | **Pytest** | Automated tests |
 | **Ruff 0.16.3** | Reproducible CI linting |
-| **GitHub Actions** | CI/CD pipeline (lint → test) |
+| **GitHub Actions** | CI pipeline (lint → test) |
 | **React + JavaScript** | Frontend (UI layer) |
 | **Vite** | Frontend build tool |
 | **Axios** | HTTP calls from the frontend |
@@ -360,12 +360,12 @@ Access at: `http://127.0.0.1:8000/docs`
 ## 🧪 Tests
 
 ```bash
-pytest Tests/ -q
+python -m pytest Tests/ -q
 ```
 
 ---
 
-## 🔄 CI/CD
+## 🔄 CI
 
 Every push and pull request to `main`/`master` triggers:
 1. **Lint** — Ruff checks code quality
